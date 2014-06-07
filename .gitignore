@@ -1,0 +1,11 @@
+# Intellij files
+.idea
+*iml
+*ipr
+*iws
+
+# Gradle wrapper
+.gradle
+
+# Build directory
+build
