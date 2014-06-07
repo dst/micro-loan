@@ -9,7 +9,10 @@ Adjust application.properties if needed.
 
 ## Starting server
 Linux:
-    ./gradlew clean bootRun
+
+```
+./gradlew clean bootRun
+```
 
 Windows:
 Use gradlew.bat
@@ -21,7 +24,7 @@ For default application.properties:
 ## Technology stack
 - back-end: Java 8, Spring Boot, Spring Data, JPA with Hibernate, embedded H2 Database, Lombok 
 - testing: JUnit 4, mockito, AssertJ, MockMvc
- -building/deploying: gradle, embedded Apache Tomcat
+- building/deploying: gradle, embedded Apache Tomcat
 
 ## Development
 
@@ -30,19 +33,32 @@ For default application.properties:
 
 ### New library
 - Add gradle dependency
+- Download gradle dependency: $ ./gradlew assemble
 - Add IDE dependency:
     - IDEA: ./gradlew idea
     - Eclipse: ./gradlew eclipse
     
-### Example session with server:
+## Example session with server:
 Create customer:
-    $ curl -v H "Content-Type: application/json" -d '{"firstName":"abc", "lastName":"xyz"}' localhost:8888/customers
+
+```
+$ curl -v H "Content-Type: application/json" -d '{"firstName":"abc", "lastName":"xyz"}' localhost:8888/customers
+```
 
 View customer:
-    $ curl -v localhost:8888/customers/1
+
+```
+$ curl -v localhost:8888/customers/1
+```
 
 Create loan:
-    $ curl -H "Content-Type: application/json" -d '{"amount": 10.0}' localhost:8888/loans
+
+```
+$ curl -H "Content-Type: application/json" -d '{"amount": 10.0}' localhost:8888/loans
+```
 
 View loan:
-    $ curl localhost:8888/loans/1
+
+```
+$ curl localhost:8888/loans/1
+```
