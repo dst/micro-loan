@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/dst/micro-loan.svg)](https://travis-ci.org/dst/micro-loan)
 # micro-loan
 
 ## System dependencies
