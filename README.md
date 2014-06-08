@@ -22,7 +22,7 @@ For default application.properties:
     $ curl localhost:8888/info
 
 ## Technology stack
-- back-end: Java 8, Spring Boot, Spring Data, JPA with Hibernate, embedded H2 Database, Lombok 
+- back-end: Java 8, Spring Boot, Spring Data, JPA with Hibernate, embedded H2 Database, Lombok, Logback
 - testing: JUnit 4, mockito, AssertJ, MockMvc
 - building/deploying: gradle, embedded Apache Tomcat
 
