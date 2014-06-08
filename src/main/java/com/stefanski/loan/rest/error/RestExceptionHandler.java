@@ -20,17 +20,27 @@ public class RestExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handleResourceNotFoundException(ResourceNotFoundException ex) {
-        log.debug("Resource not found: {}", ex.getMessage());
+        log.warn("Resource not found: {}", ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessage> handleValidationError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
-        log.debug("Validation error: {}", result);
+        log.warn("Validation error: {}", result);
 
         ErrorMessage error = new ErrorMessage();
         error.setMessage("Invalid parameters");
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorMessage> handleAnyException(Exception ex) {
+        log.error("Not handled exception: {}", ex);
+
+        ErrorMessage error = new ErrorMessage();
+        error.setMessage("Internal server error");
+
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
