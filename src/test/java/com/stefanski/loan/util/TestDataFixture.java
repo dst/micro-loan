@@ -2,6 +2,7 @@ package com.stefanski.loan.util;
 
 import com.stefanski.loan.core.domain.Customer;
 import com.stefanski.loan.core.domain.Loan;
+import com.stefanski.loan.rest.model.request.LoanRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,15 +19,6 @@ public class TestDataFixture {
     public static final String SIMPLE_LAST_NAME = "Smith";
 
 
-    public static Loan simpleLoan() {
-        Loan loan = new Loan();
-        loan.setAmount(BigDecimal.TEN);
-        loan.setInterest(BigDecimal.ONE);
-        loan.setStartDateTime(LocalDateTime.now());
-        loan.setEndDateTime(LocalDateTime.now());
-        return loan;
-    }
-
     public static Customer simpleCustomer() {
         Customer customer = new Customer();
         customer.setFirstName(SIMPLE_FIRST_NAME);
@@ -41,4 +33,23 @@ public class TestDataFixture {
         return customer;
     }
 
+    public static Loan simpleLoan() {
+        return simpleLoanWithAmount(BigDecimal.TEN);
+    }
+
+    public static Loan simpleLoanWithAmount(BigDecimal amount) {
+        Loan loan = new Loan();
+        loan.setAmount(amount);
+        loan.setInterest(BigDecimal.ONE);
+        loan.setStartDateTime(LocalDateTime.now());
+        loan.setEndDateTime(LocalDateTime.now());
+        return loan;
+    }
+
+    public static LoanRequest simpleLoanReqest() {
+        LoanRequest loanReq = new LoanRequest();
+        loanReq.setAmount(BigDecimal.TEN);
+        loanReq.setDaysCount(30);
+        return loanReq;
+    }
 }

@@ -2,7 +2,6 @@ package com.stefanski.loan.core.repository;
 
 import com.stefanski.loan.Application;
 import com.stefanski.loan.core.domain.Customer;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Application.class)
-@Ignore("Too slow, ignore now for faster TDD")
+//@Ignore("Too slow, ignore now for faster TDD")
 public class CustomerRepositoryIntegrationTest {
 
     @Autowired

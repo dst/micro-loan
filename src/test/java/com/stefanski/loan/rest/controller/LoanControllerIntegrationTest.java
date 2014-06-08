@@ -1,7 +1,9 @@
 package com.stefanski.loan.rest.controller;
 
 import com.stefanski.loan.core.domain.Loan;
-import com.stefanski.loan.core.repository.LoanRepository;
+import com.stefanski.loan.core.error.ResourceNotFoundException;
+import com.stefanski.loan.core.service.LoanService;
+import com.stefanski.loan.rest.model.request.LoanRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -10,11 +12,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 
-import static com.stefanski.loan.util.TestDataFixture.CUSTOMER_ID;
-import static com.stefanski.loan.util.TestDataFixture.LOAN_ID;
+import static com.stefanski.loan.util.TestDataFixture.*;
 import static com.stefanski.loan.util.TestHelper.APPLICATION_JSON_UTF8;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -24,8 +24,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class LoanControllerIntegrationTest extends ControllerIntegrationTest {
 
+    private static final String CUSTOMER_LOANS_URL = String.format("/customers/%s/loans", CUSTOMER_ID);
+
     @Mock
-    private LoanRepository LoanRepository;
+    private LoanService loanService;
 
     @InjectMocks
     private LoanController controller;
@@ -37,32 +39,63 @@ public class LoanControllerIntegrationTest extends ControllerIntegrationTest {
     }
 
     @Test
-    public void shouldViewLoanUseHttpOk() throws Exception {
-        when(LoanRepository.findOne(LOAN_ID)).thenReturn(new Loan());
+    public void shouldReturnValidationErrorIfAmountIsMissing() throws Exception {
+        LoanRequest loanReq = new LoanRequest();
+        loanReq.setDaysCount(30);
 
-        mockMvc.perform(get("/customers/{customerId}/loans/{loanId}", CUSTOMER_ID, LOAN_ID))
+        mockMvc.perform(postWithJson(CUSTOMER_LOANS_URL, loanReq))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.message", is("Invalid parameters")));
+    }
+
+    @Test
+    public void shouldReturnIdForCreatedLoan() throws Exception {
+        LoanRequest loanReq = simpleLoanReqest();
+        when(loanService.applyForLoan(CUSTOMER_ID, loanReq)).thenReturn(LOAN_ID);
+
+        mockMvc.perform(postWithJson(CUSTOMER_LOANS_URL, loanReq))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is(LOAN_ID.intValue())));
+    }
+
+    @Test
+    public void shouldCreateLoanLocation() throws Exception {
+        LoanRequest loanReq = simpleLoanReqest();
+        when(loanService.applyForLoan(CUSTOMER_ID, loanReq)).thenReturn(LOAN_ID);
+
+        //TODO(dst): get rid off http://localhost
+        String expectedLocation = "http://localhost" + CUSTOMER_LOANS_URL + "/" + LOAN_ID;
+
+        mockMvc.perform(postWithJson(CUSTOMER_LOANS_URL, loanReq))
+                .andExpect(header().string("Location", is(expectedLocation)));
+    }
+
+    @Test
+    public void shouldViewLoanUseHttpOk() throws Exception {
+        when(loanService.findById(LOAN_ID)).thenReturn(new Loan());
+
+        mockMvc.perform(get(CUSTOMER_LOANS_URL + "/" + LOAN_ID))
                 .andExpect(status().isOk());
     }
 
-
     @Test
     public void shouldViewLoanUseHttpNotFound() throws Exception {
-        when(LoanRepository.findOne(LOAN_ID)).thenReturn(null);
+        when(loanService.findById(LOAN_ID)).thenThrow(new ResourceNotFoundException());
 
-        mockMvc.perform(get("/customers/{customerId}/loans/{loanId}", CUSTOMER_ID, LOAN_ID))
+        mockMvc.perform(get(CUSTOMER_LOANS_URL + "/" + LOAN_ID))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void shouldViewLoanRenderCorrectly() throws Exception {
-        Loan loan = new Loan();
-        loan.setAmount(BigDecimal.TEN);
-        when(LoanRepository.findOne(any(Long.class))).thenReturn(loan);
+        Loan loan = simpleLoanWithAmount(BigDecimal.TEN);
+        when(loanService.findById(LOAN_ID)).thenReturn(loan);
 
-        mockMvc.perform(get("/customers/{id}/loans/{id}", CUSTOMER_ID, LOAN_ID))
+        mockMvc.perform(get(CUSTOMER_LOANS_URL + "/" + LOAN_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.amount", is(10)));
     }
-
 }

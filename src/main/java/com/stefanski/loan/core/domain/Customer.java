@@ -3,10 +3,9 @@ package com.stefanski.loan.core.domain;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Dariusz Stefanski
@@ -24,5 +23,8 @@ public class Customer {
 
     @NotEmpty
     private String lastName;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Loan> loans = new LinkedList<>();
 }
 
