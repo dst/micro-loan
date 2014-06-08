@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import static com.stefanski.loan.util.TestDataFixture.simpleCustomer;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -20,7 +21,7 @@ public class CustomerRepositoryIntegrationTest {
     @Test
     public void shouldFindCustomerById() throws Exception {
         // given:
-        Customer customer = new Customer();
+        Customer customer = simpleCustomer();
         customer = customerRepository.save(customer);
         long customerId = customer.getId();
 

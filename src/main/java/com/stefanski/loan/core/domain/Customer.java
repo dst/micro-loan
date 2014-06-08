@@ -1,6 +1,7 @@
 package com.stefanski.loan.core.domain;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,9 +17,12 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
+    @NotEmpty
     private String firstName;
+
+    @NotEmpty
     private String lastName;
 }
 
