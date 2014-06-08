@@ -8,13 +8,15 @@
 Adjust application.properties if needed.
 
 ## Starting server
-Linux:
+For Windows use gradlew.bat
 
-```
-./gradlew clean bootRun
-```
+### Run from gradle
 
-Fo Windows use gradlew.bat
+    ./gradlew clean bootRun
+
+### Run the fat jar
+
+    java -jar build/libs/micro-loan-0.0.1.jar
 
 ## Verification
 For default application.properties:
@@ -22,7 +24,7 @@ For default application.properties:
 
 ## Technology stack
 - back-end: Java 8, Spring Boot, Spring Data, JPA with Hibernate, embedded H2 Database, Lombok, Logback
-- testing: JUnit 4, mockito, AssertJ, MockMvc
+- testing: JUnit 4, mockito, AssertJ, MockMvc, Cucumber, Groovy
 - building/deploying: embedded Apache Tomcat, gradle, JaCoCo
 
 ## Development
@@ -38,51 +40,28 @@ For default application.properties:
     - Eclipse: ./gradlew eclipse
     
 ### Code coverage
-```
-$ ./gradlew jacocoTestReport
-$ browser build/reports/jacoco/index.html
-```
+    $ ./gradlew jacocoTestReport
+    $ browser build/reports/jacoco/test/html/index.html
 
 ### Functional tests
-```
-$ ./gradlew functionalTest
-$ browser build/reports/cucumber/index.html
-```
+    $ ./gradlew functionalTest
+    $ browser build/reports/cucumber/index.html
 
 ## Example session with server:
-Create customer:
+### Create customer
+    $ curl -v H "Content-Type: application/json" -d '{"firstName":"abc", "lastName":"xyz"}' localhost:8888/customers
 
-```
-$ curl -v H "Content-Type: application/json" -d '{"firstName":"abc", "lastName":"xyz"}' localhost:8888/customers
-```
+### View customer
+    $ curl -v localhost:8888/customers/1
 
-View customer:
+### Create first loan for customer 1
+    $ curl -H "Content-Type: application/json" -d '{"amount": 10.0}' localhost:8888/customers/1/loans
 
-```
-$ curl -v localhost:8888/customers/1
-```
+### View first loan
+    $ curl localhost:8888/customer/1/loans/1
 
-Create first loan for customer 1:
+### Create second loan for customer 1
+    $ curl -H "Content-Type: application/json" -d '{"amount": 20.0}' localhost:8888/customers/1/loans
 
-```
-$ curl -H "Content-Type: application/json" -d '{"amount": 10.0}' localhost:8888/customers/1/loans
-```
-
-View first loan:
-
-```
-$ curl localhost:8888/customer/1/loans/1
-```
-
-Create second loan for customer 1:
-
-```
-$ curl -H "Content-Type: application/json" -d '{"amount": 20.0}' localhost:8888/customers/1/loans
-```
-
-View all loans
-
-
-```
-$ curl localhost:8888/customer/1/loans
-```
+### View all loans
+    $ curl localhost:8888/customer/1/loans
