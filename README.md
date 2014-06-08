@@ -51,14 +51,27 @@ View customer:
 $ curl -v localhost:8888/customers/1
 ```
 
-Create loan:
+Create first loan for customer 1:
 
 ```
-$ curl -H "Content-Type: application/json" -d '{"amount": 10.0}' localhost:8888/loans
+$ curl -H "Content-Type: application/json" -d '{"amount": 10.0}' localhost:8888/customers/1/loans
 ```
 
-View loan:
+View first loan:
 
 ```
-$ curl localhost:8888/loans/1
+$ curl localhost:8888/customer/1/loans/1
+```
+
+Create second loan for customer 1:
+
+```
+$ curl -H "Content-Type: application/json" -d '{"amount": 20.0}' localhost:8888/customers/1/loans
+```
+
+View all loans
+
+
+```
+$ curl localhost:8888/customer/1/loans
 ```
