@@ -40,8 +40,15 @@ For default application.properties:
 ### Code coverage
 ```
 $ ./gradlew jacocoTestReport
-$ browser build/reports/tests/index.html
+$ browser build/reports/jacoco/index.html
 ```
+
+### Functional tests
+```
+$ ./gradlew functionalTest
+$ browser build/reports/cucumber/index.html
+```
+
 ## Example session with server:
 Create customer:
 
