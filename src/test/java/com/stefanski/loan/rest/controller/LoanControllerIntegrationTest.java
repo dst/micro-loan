@@ -39,14 +39,15 @@ public class LoanControllerIntegrationTest extends ControllerIntegrationTest {
     }
 
     @Test
-    public void shouldReturnValidationErrorIfAmountIsMissing() throws Exception {
+    public void shouldReturnBadRequestIfAmountIsMissing() throws Exception {
         LoanRequest loanReq = new LoanRequest();
         loanReq.setDaysCount(30);
 
         mockMvc.perform(postWithJson(CUSTOMER_LOANS_URL, loanReq))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.message", is("Invalid parameters")));
+                .andExpect(jsonPath("$.message", is("Invalid parameters")))
+                .andExpect(jsonPath("$.details[0].field", is("amount")))
+                .andExpect(jsonPath("$.details[0].message", is("may not be null")));
     }
 
     @Test

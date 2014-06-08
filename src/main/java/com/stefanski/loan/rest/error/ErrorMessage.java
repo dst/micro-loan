@@ -9,4 +9,5 @@ import lombok.Data;
 public class ErrorMessage {
 
     private String message;
+    private Object details;
 }

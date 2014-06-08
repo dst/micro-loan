@@ -34,14 +34,16 @@ public class CustomerControllerIntegrationTest extends ControllerIntegrationTest
     }
 
     @Test
-    public void shouldReturnValidationErrorIfLastNameIsMissing() throws Exception {
+    public void shouldReturnBadRequestIfLastNameIsMissing() throws Exception {
         Customer customer = new Customer();
         customer.setFirstName("John");
 
         mockMvc.perform(postWithJson("/customers", customer))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.message", is("Invalid parameters")));
+                .andExpect(jsonPath("$.message", is("Invalid parameters")))
+                .andExpect(jsonPath("$.details[0].field", is("lastName")))
+                .andExpect(jsonPath("$.details[0].message", is("may not be empty")));
     }
 
     @Test

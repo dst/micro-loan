@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
 /**
  * @author Dariusz Stefanski
  */
@@ -30,6 +34,11 @@ public class RestExceptionHandler {
 
         ErrorMessage error = new ErrorMessage();
         error.setMessage("Invalid parameters");
+        List<ParameterError> details = result.getFieldErrors()
+                .stream()
+                .map(ParameterError::fromFieldError)
+                .collect(toList());
+        error.setDetails(details);
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
@@ -39,7 +48,7 @@ public class RestExceptionHandler {
         log.error("Not handled exception: {}", ex);
 
         ErrorMessage error = new ErrorMessage();
-        error.setMessage("Internal server error");
+        error.setMessage(ex.getMessage());
 
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
