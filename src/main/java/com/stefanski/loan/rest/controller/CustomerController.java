@@ -3,7 +3,8 @@ package com.stefanski.loan.rest.controller;
 import com.stefanski.loan.core.domain.Customer;
 import com.stefanski.loan.core.error.ResourceNotFoundException;
 import com.stefanski.loan.core.service.CustomerService;
-import com.stefanski.loan.rest.model.Creation;
+import com.stefanski.loan.rest.model.response.CreationResp;
+import com.stefanski.loan.rest.model.response.CustomerResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -34,17 +35,18 @@ public class CustomerController {
     private CustomerService customerService;
 
     @RequestMapping(method = POST)
-    public ResponseEntity<Creation> createCustomer(@Valid @RequestBody Customer customer, UriComponentsBuilder builder) {
+    public ResponseEntity<CreationResp> createCustomer(@Valid @RequestBody Customer customer, UriComponentsBuilder builder) {
         Long customerId = customerService.create(customer);
         HttpHeaders headers = getHttpHeadersForNewCustomer(customerId, builder);
-        Creation creation = new Creation(customerId);
+        CreationResp creation = new CreationResp(customerId);
         return new ResponseEntity<>(creation, headers, CREATED);
     }
 
     @RequestMapping(value = "/{customerId}", method = GET)
-    public ResponseEntity<Customer> viewCustomer(@PathVariable Long customerId) throws ResourceNotFoundException {
+    public ResponseEntity<CustomerResp> viewCustomer(@PathVariable Long customerId) throws ResourceNotFoundException {
         Customer customer = customerService.findById(customerId);
-        return new ResponseEntity<>(customer, OK);
+        CustomerResp customerResp = CustomerResp.fromCustomer(customer);
+        return new ResponseEntity<>(customerResp, OK);
     }
 
     private HttpHeaders getHttpHeadersForNewCustomer(Long customerId, UriComponentsBuilder builder) {

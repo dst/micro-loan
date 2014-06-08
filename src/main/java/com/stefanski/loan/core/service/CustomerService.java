@@ -28,8 +28,8 @@ public class CustomerService {
 
     public Long create(Customer customer) {
         Customer createdCustomer = customerRepository.save(customer);
+        log.debug("Created customer: {}", createdCustomer);
         Long customerId = createdCustomer.getId();
-        log.debug("Created customer with id: {}", customerId);
         return customerId;
     }
 }

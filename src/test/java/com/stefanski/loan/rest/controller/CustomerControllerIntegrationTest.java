@@ -12,7 +12,6 @@ import org.mockito.MockitoAnnotations;
 import static com.stefanski.loan.util.TestDataFixture.*;
 import static com.stefanski.loan.util.TestHelper.APPLICATION_JSON_UTF8;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -100,7 +99,7 @@ public class CustomerControllerIntegrationTest extends ControllerIntegrationTest
     @Test
     public void shouldViewCustomerRenderCorrectly() throws Exception {
         Customer customer = simpleCustomer();
-        when(customerService.findById(any(Long.class))).thenReturn(customer);
+        when(customerService.findById(CUSTOMER_ID)).thenReturn(customer);
 
         mockMvc.perform(get("/customers/{id}", CUSTOMER_ID))
                 .andExpect(status().isOk())

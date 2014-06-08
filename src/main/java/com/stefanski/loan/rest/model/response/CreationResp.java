@@ -1,4 +1,4 @@
-package com.stefanski.loan.rest.model;
+package com.stefanski.loan.rest.model.response;
 
 import lombok.Data;
 
@@ -6,9 +6,9 @@ import lombok.Data;
  * @author Dariusz Stefanski
  */
 @Data
-public class Creation {
+public class CreationResp {
 
-    public Creation(Long id) {
+    public CreationResp(Long id) {
         this.id = id;
     }
 
