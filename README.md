@@ -14,8 +14,7 @@ Linux:
 ./gradlew clean bootRun
 ```
 
-Windows:
-Use gradlew.bat
+Fo Windows use gradlew.bat
 
 ## Verification
 For default application.properties:
@@ -24,7 +23,7 @@ For default application.properties:
 ## Technology stack
 - back-end: Java 8, Spring Boot, Spring Data, JPA with Hibernate, embedded H2 Database, Lombok, Logback
 - testing: JUnit 4, mockito, AssertJ, MockMvc
-- building/deploying: gradle, embedded Apache Tomcat
+- building/deploying: embedded Apache Tomcat, gradle, JaCoCo
 
 ## Development
 
@@ -38,6 +37,11 @@ For default application.properties:
     - IDEA: ./gradlew idea
     - Eclipse: ./gradlew eclipse
     
+### Code coverage
+```
+$ ./gradlew jacocoTestReport
+$ browser build/reports/tests/index.html
+```
 ## Example session with server:
 Create customer:
 
