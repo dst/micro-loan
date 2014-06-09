@@ -20,6 +20,7 @@ For Windows use gradlew.bat
 
 ## Verification
 For default application.properties:
+
     $ curl localhost:8888/info
 
 ## Technology stack
