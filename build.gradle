@@ -75,16 +75,16 @@ jacoco {
 }
 
 configurations {
-    functTestCompile.extendsFrom testCompile
-    functTestRuntime.extendsFrom testRuntime
+    acceptTestCompile.extendsFrom testCompile
+    acceptTestRuntime.extendsFrom testRuntime
 }
 
 sourceSets {
-    functionalTest {
-        groovy.srcDir file('src/testFunctional/groovy')
-        resources.srcDir file('src/testFunctional/resources')
-        compileClasspath = sourceSets.main.output + sourceSets.test.output + configurations.functTestCompile
-        runtimeClasspath = output + compileClasspath + configurations.functTestRuntime
+    acceptanceTest {
+        groovy.srcDir file('src/testAcceptance/groovy')
+        resources.srcDir file('src/testAcceptance/resources')
+        compileClasspath = sourceSets.main.output + sourceSets.test.output + configurations.acceptTestCompile
+        runtimeClasspath = output + compileClasspath + configurations.acceptTestRuntime
     }
 }
 
@@ -96,11 +96,11 @@ task startServer(type: SpawnProcessTask, dependsOn: 'assemble') {
 
 task stopServer(type: KillProcessTask)
 
-task functionalTest(type: Test) {
-    testClassesDir = sourceSets.functionalTest.output.classesDir
-    classpath = sourceSets.functionalTest.runtimeClasspath
+task acceptanceTest(type: Test) {
+    testClassesDir = sourceSets.acceptanceTest.output.classesDir
+    classpath = sourceSets.acceptanceTest.runtimeClasspath
     dependsOn startServer
     finalizedBy stopServer
 }
 
-check.dependsOn functionalTest
+check.dependsOn acceptanceTest

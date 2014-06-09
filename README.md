@@ -44,8 +44,8 @@ For default application.properties:
     $ ./gradlew jacocoTestReport
     $ browser build/reports/jacoco/test/html/index.html
 
-### Functional tests
-    $ ./gradlew functionalTest
+### Acceptance tests
+    $ ./gradlew acceptanceTest
     $ browser build/reports/cucumber/index.html
 
 ## Example session with server:
