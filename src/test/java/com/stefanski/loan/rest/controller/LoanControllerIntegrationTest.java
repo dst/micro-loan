@@ -1,7 +1,7 @@
 package com.stefanski.loan.rest.controller;
 
 import com.stefanski.loan.core.domain.Loan;
-import com.stefanski.loan.core.error.ResourceNotFoundException;
+import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.service.LoanService;
 import com.stefanski.loan.rest.model.request.LoanRequest;
 import org.junit.Before;

@@ -6,7 +6,9 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * @author Dariusz Stefanski
@@ -31,9 +33,20 @@ public class Loan {
     @NotNull
     private LocalDateTime endDateTime;
 
+    @NotNull
+    private String ip;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Customer customer;
+
+    public LocalDate getStartDate() {
+        return startDateTime.toLocalDate();
+    }
+
+    public LocalTime getStartTime() {
+        return startDateTime.toLocalTime();
+    }
 
     @Override
     public String toString() {

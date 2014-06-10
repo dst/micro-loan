@@ -1,4 +1,4 @@
-package com.stefanski.loan.core.error;
+package com.stefanski.loan.core.ex;
 
 /**
  * Throw when resource (customer, loan) was not found.

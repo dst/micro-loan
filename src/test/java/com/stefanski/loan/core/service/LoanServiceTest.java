@@ -1,8 +1,9 @@
 package com.stefanski.loan.core.service;
 
 import com.stefanski.loan.core.domain.Loan;
-import com.stefanski.loan.core.error.ResourceNotFoundException;
+import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.repository.LoanRepository;
+import com.stefanski.loan.core.risk.RiskAnalyser;
 import com.stefanski.loan.rest.model.request.LoanRequest;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +23,9 @@ public class LoanServiceTest {
 
     @Mock
     private CustomerService customerService;
+
+    @Mock
+    private RiskAnalyser riskAnalyser;
 
     @Mock
     private LoanRepository loanRepository;

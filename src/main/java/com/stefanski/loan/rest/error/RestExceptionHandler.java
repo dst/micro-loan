@@ -1,6 +1,7 @@
 package com.stefanski.loan.rest.error;
 
-import com.stefanski.loan.core.error.ResourceNotFoundException;
+import com.stefanski.loan.core.ex.ResourceNotFoundException;
+import com.stefanski.loan.core.ex.RiskTooHighException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,18 @@ public class RestExceptionHandler {
         log.warn("Resource not found: {}", ex.getMessage());
     }
 
+    @ExceptionHandler(RiskTooHighException.class)
+    public ResponseEntity<ErrorMessage> handleRiskTooHighException(RiskTooHighException ex) {
+        log.info("Loan not issued because of: {}", ex.getMessage());
+        ErrorMessage error = new ErrorMessage(ex.getMessage());
+        //TODO(dst), 6/9/14: is the status code correct?
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessage> handleValidationError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
-        log.warn("Validation error: {}", result);
+        log.warn("Validation ex: {}", result);
 
         ErrorMessage error = new ErrorMessage();
         error.setMessage("Invalid parameters");

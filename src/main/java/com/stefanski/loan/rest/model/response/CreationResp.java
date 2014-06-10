@@ -8,9 +8,9 @@ import lombok.Data;
 @Data
 public class CreationResp {
 
+    private Long id;
+
     public CreationResp(Long id) {
         this.id = id;
     }
-
-    private Long id;
 }

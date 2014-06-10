@@ -15,4 +15,7 @@ public class LoanRequest {
 
     @NotNull
     private Integer daysCount;
+
+    // Client should not fill this. It will be overridden by controller.
+    private String ip;
 }

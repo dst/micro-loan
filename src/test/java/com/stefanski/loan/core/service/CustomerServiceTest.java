@@ -1,7 +1,7 @@
 package com.stefanski.loan.core.service;
 
 import com.stefanski.loan.core.domain.Customer;
-import com.stefanski.loan.core.error.ResourceNotFoundException;
+import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.repository.CustomerRepository;
 import org.junit.Before;
 import org.junit.Test;

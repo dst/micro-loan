@@ -1,0 +1,17 @@
+package com.stefanski.loan.core.repository;
+
+import com.stefanski.loan.Application;
+import org.junit.runner.RunWith;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.SpringApplicationContextLoader;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+/**
+ * @author Dariusz Stefanski
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = Application.class, loader = SpringApplicationContextLoader.class)
+@EnableConfigurationProperties
+abstract class RepositoryIntegrationTest {
+}

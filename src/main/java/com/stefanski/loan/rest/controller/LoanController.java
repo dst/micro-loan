@@ -1,7 +1,8 @@
 package com.stefanski.loan.rest.controller;
 
 import com.stefanski.loan.core.domain.Loan;
-import com.stefanski.loan.core.error.ResourceNotFoundException;
+import com.stefanski.loan.core.ex.ResourceNotFoundException;
+import com.stefanski.loan.core.ex.RiskTooHighException;
 import com.stefanski.loan.core.service.LoanService;
 import com.stefanski.loan.rest.model.request.LoanRequest;
 import com.stefanski.loan.rest.model.response.CreationResp;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -41,8 +43,10 @@ public class LoanController {
     public ResponseEntity<CreationResp> createLoan(
             @PathVariable Long customerId,
             @Valid @RequestBody LoanRequest loanReq,
-            UriComponentsBuilder builder) throws ResourceNotFoundException {
+            UriComponentsBuilder builder, HttpServletRequest req)
+            throws ResourceNotFoundException, RiskTooHighException {
 
+        loanReq.setIp(req.getRemoteAddr());
         Long loanId = loanService.applyForLoan(customerId, loanReq);
         HttpHeaders headers = getHttpHeadersForNewLoan(loanId, customerId, builder);
         CreationResp creation = new CreationResp(loanId);
