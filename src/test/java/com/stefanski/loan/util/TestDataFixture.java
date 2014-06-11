@@ -39,10 +39,10 @@ public class TestDataFixture {
     }
 
     public static Loan simpleLoanWithAmount(BigDecimal amount) {
-        return createLoan(amount, null);
+        return simpleLoan(amount, null);
     }
 
-    public static Loan createLoan(BigDecimal amount, LocalDateTime start) {
+    public static Loan simpleLoan(BigDecimal amount, LocalDateTime start) {
         if (start == null) {
             start = LocalDateTime.now();
         }
@@ -51,8 +51,8 @@ public class TestDataFixture {
         Loan loan = new Loan();
         loan.setAmount(amount);
         loan.setInterest(BigDecimal.ONE);
-        loan.setStartDateTime(start);
-        loan.setEndDateTime(end);
+        loan.setApplicationTime(start);
+        loan.setDeadline(end);
         loan.setIp(IP);
         return loan;
     }

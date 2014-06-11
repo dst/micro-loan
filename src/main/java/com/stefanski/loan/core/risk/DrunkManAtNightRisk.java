@@ -25,7 +25,7 @@ public class DrunkManAtNightRisk implements Risk {
 
     @Override
     public String getMessage() {
-        return "A loan with a max possible amount is not possible between 00:00 to 6:00 AM";
+        return "A loan with a max possible amount is not possible between 00:00 and 6:00 AM";
     }
 
     @Override
@@ -38,9 +38,10 @@ public class DrunkManAtNightRisk implements Risk {
     }
 
     private boolean isAppliedAtNight(Loan loan) {
-        LocalTime time = loan.getStartTime();
+        LocalTime time = loan.getApplicationTime().toLocalTime();
         assert time != null;
 
+        //TODO(dst), 6/10/14: think if it is what author thought about
         return time.isAfter(MIDNIGHT) && time.isBefore(MIDNIGHT.plusHours(6));
     }
 

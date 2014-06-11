@@ -6,9 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 /**
  * @author Dariusz Stefanski
@@ -28,25 +26,16 @@ public class Loan {
     private BigDecimal interest;
 
     @NotNull
-    private LocalDateTime startDateTime;
+    private LocalDateTime applicationTime;
 
     @NotNull
-    private LocalDateTime endDateTime;
+    private LocalDateTime deadline;
 
     @NotNull
     private String ip;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
     private Customer customer;
-
-    public LocalDate getStartDate() {
-        return startDateTime.toLocalDate();
-    }
-
-    public LocalTime getStartTime() {
-        return startDateTime.toLocalTime();
-    }
 
     @Override
     public String toString() {
@@ -54,8 +43,8 @@ public class Loan {
                 .add("id", id)
                 .add("amount", amount)
                 .add("interest", interest)
-                .add("startDateTime", startDateTime)
-                .add("endDateTime", endDateTime)
+                .add("applicationTime", applicationTime)
+                .add("deadline", deadline)
                 .toString();
 
     }

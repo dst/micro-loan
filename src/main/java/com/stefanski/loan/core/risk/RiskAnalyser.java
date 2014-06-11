@@ -16,7 +16,7 @@ import java.util.List;
 public class RiskAnalyser {
 
     @Autowired
-    List<Risk> rules;
+    private List<Risk> rules;
 
     public void validate(Loan loan) throws RiskTooHighException {
         for (Risk rule : rules) {
@@ -25,5 +25,9 @@ public class RiskAnalyser {
                 throw new RiskTooHighException(rule.getMessage());
             }
         }
+    }
+
+    public void setRules(List<Risk> rules) {
+        this.rules = rules;
     }
 }

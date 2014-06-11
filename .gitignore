@@ -4,8 +4,9 @@
 *ipr
 *iws
 
-# Gradle wrapper
+# Gradle and its plugins
 .gradle
+.pid.lock
 
 # Build directory
 build

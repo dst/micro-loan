@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Dariusz Stefanski
  */
-public class CustomerRepositoryIntegrationTest extends RepositoryIntegrationTest {
+public class CustomerRepositoryTest extends RepositoryIntegrationTest {
 
     @Autowired
     private CustomerRepository customerRepository;

@@ -71,8 +71,8 @@ public class LoanService {
         Loan loan = new Loan();
         loan.setAmount(loanReq.getAmount());
         loan.setInterest(getLoanInterest());
-        loan.setStartDateTime(begin);
-        loan.setEndDateTime(end);
+        loan.setApplicationTime(begin);
+        loan.setDeadline(end);
         loan.setIp(loanReq.getIp());
         return loan;
     }

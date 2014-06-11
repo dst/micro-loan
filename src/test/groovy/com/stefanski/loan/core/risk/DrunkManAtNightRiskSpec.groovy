@@ -21,9 +21,9 @@ class DrunkManAtNightRiskSpec extends Specification {
         risk.setMaxAmount(MAX_AMOUNT);
     }
 
-    def "Detect risk of drunk man at night when needed"() {
+    def "Should detect risk of drunk man at night when needed"() {
         given:
-        Loan loan = createLoan(amount, time);
+        Loan loan = simpleLoan(amount, time);
 
         expect:
         risk.isApplicableTo(loan) == risky

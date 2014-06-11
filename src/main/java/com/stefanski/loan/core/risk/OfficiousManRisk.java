@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.time.LocalDate;
 
 /**
  * @author Dariusz Stefanski
@@ -18,27 +18,17 @@ public class OfficiousManRisk implements Risk {
 // officious- nadgorliwy, natretny, narzucajacy sie
 
     @Value("${system.loan.limitPerIp}")
-    private int loanLimitPerIp;
+    private long loanLimitPerIp;
 
     @Autowired
     private LoanRepository loanRepository;
 
     @Override
     public boolean isApplicableTo(Loan loan) {
-        List<Loan> loansByIp = loanRepository.findByIp(loan.getIp());
-        //TODO(dst), 6/9/14: create query in repository
-        int count = 0;
-        for (Loan l : loansByIp) {
-            if (loan.getStartDate().equals(l.getStartDate())) {
-                count++;
-                if (count >= loanLimitPerIp) {
-                    log.info("Too many loans taken in one day from IP {}", loan.getIp());
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        LocalDate applicationDay = loan.getApplicationTime().toLocalDate();
+        long count = loanRepository.getLoanCountFor(loan.getIp(), applicationDay);
+        log.debug("{} loans taken in one day from IP {}", count, loan.getIp());
+        return count >= loanLimitPerIp;
     }
 
     @Override
