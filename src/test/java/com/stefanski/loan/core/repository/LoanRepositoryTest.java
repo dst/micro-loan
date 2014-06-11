@@ -51,7 +51,6 @@ public class LoanRepositoryTest extends RepositoryIntegrationTest {
         LocalDateTime end = now.plusMinutes(30);
 
         // when:
-        assertThat(loanRepository.count()).isEqualTo(4); //temporary
         List<Loan> loans = loanRepository.findByIpAndApplicationTimeBetween(loan.getIp(), start, end);
 
         // then:

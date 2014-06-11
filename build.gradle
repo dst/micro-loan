@@ -42,6 +42,8 @@ dependencies {
     compile "org.hibernate:hibernate-entitymanager:4.3.5.Final"
     compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final"
     compile "org.springframework.data:spring-data-jpa:1.5.2.RELEASE"
+    compile 'org.jadira.usertype:usertype.extended:3.2.0.GA'
+    compile 'org.threeten:threetenbp:0.9'
 
     // Validation:
     compile "org.hibernate:hibernate-validator:5.1.1.Final"
@@ -68,7 +70,6 @@ dependencies {
     testCompile("org.spockframework:spock-core:0.7-groovy-2.0") {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-
 }
 
 task wrapper(type: Wrapper) {

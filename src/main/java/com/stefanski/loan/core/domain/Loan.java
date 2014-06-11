@@ -2,6 +2,7 @@ package com.stefanski.loan.core.domain;
 
 import com.google.common.base.Objects;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -26,9 +27,11 @@ public class Loan {
     private BigDecimal interest;
 
     @NotNull
+    @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
     private LocalDateTime applicationTime;
 
     @NotNull
+    @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
     private LocalDateTime deadline;
 
     @NotNull
