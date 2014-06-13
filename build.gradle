@@ -4,6 +4,7 @@ import com.wiredforcode.gradle.spawn.SpawnProcessTask
 apply plugin: "coveralls"
 apply plugin: "eclipse"
 apply plugin: "groovy"
+apply plugin: "heroku"
 apply plugin: "idea"
 apply plugin: "jacoco"
 apply plugin: "java"
@@ -19,6 +20,7 @@ buildscript {
 
     dependencies {
         classpath "com.wiredforcode:gradle-spawn-plugin:0.5.2"
+        classpath "com.wiredforcode:gradle-heroku-plugin:1.0.0"
         classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.3.0"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:1.0.2.RELEASE"
     }
@@ -124,3 +126,15 @@ task acceptanceTest(type: Test) {
 }
 
 check.dependsOn acceptanceTest
+
+if (!project.hasProperty("herokuApiKey")) {
+    // gradle.properties is not kept in git, so it is not sent to Heroku
+    herokuApiKey = "dummy-key"
+}
+heroku {
+    apiKey = herokuApiKey
+    appName = "micro-loan"
+}
+
+// To build as fast as possible on Heroku
+defaultTasks = ["clean", "assemble"]

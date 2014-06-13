@@ -13,3 +13,6 @@ build
 
 # Logs
 logs
+
+# Here are kept secret keys
+gradle.properties
