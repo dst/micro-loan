@@ -1,5 +1,6 @@
 # micro-loan
 [![Build Status](https://travis-ci.org/dst/micro-loan.svg)](https://travis-ci.org/dst/micro-loan)
+[![Coverage Status](https://coveralls.io/repos/dst/micro-loan/badge.png)](https://coveralls.io/r/dst/micro-loan)
 
 ## System dependencies
 - Java 8
