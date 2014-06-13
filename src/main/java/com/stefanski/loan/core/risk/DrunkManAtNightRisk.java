@@ -37,16 +37,31 @@ public class DrunkManAtNightRisk implements Risk {
         this.maxAmount = maxAmount;
     }
 
-    private boolean isAppliedAtNight(Loan loan) {
-        LocalTime time = loan.getApplicationTime().toLocalTime();
-        assert time != null;
-
-        //TODO(dst), 6/10/14: think if it is what author thought about
-        return time.isAfter(MIDNIGHT) && time.isBefore(MIDNIGHT.plusHours(6));
-    }
-
     private boolean isAboveOrEqualLimit(Loan loan) {
         return loan.getAmount().compareTo(maxAmount) >= 0;
     }
 
+    private boolean isAppliedAtNight(Loan loan) {
+        LocalTime time = loan.getApplicationTime().toLocalTime();
+        assert time != null;
+        return isTimeBetween(time, getNightStart(), getNightEnd());
+    }
+
+    private LocalTime getNightEnd() {
+        return getNightStart().plusHours(6);
+    }
+
+    private LocalTime getNightStart() {
+        return MIDNIGHT;
+    }
+
+    /**
+     * @param time
+     * @param start
+     * @param end
+     * @return If time is between start and end inclusive
+     */
+    private boolean isTimeBetween(LocalTime time, LocalTime start, LocalTime end) {
+        return (time.equals(start) || time.isAfter(start)) && (time.equals(end) || time.isBefore(end));
+    }
 }

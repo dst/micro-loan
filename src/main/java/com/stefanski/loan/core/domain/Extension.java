@@ -1,7 +1,9 @@
 package com.stefanski.loan.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Objects;
+import com.stefanski.loan.rest.util.LocalDateTimeSerializer;
 import lombok.Data;
 import org.hibernate.annotations.Type;
 
@@ -21,6 +23,7 @@ public class Extension {
     private Long id;
 
     @NotNull
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
     private LocalDateTime creationTime;
 

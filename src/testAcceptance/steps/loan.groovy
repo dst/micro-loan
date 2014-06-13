@@ -11,6 +11,7 @@ import static cucumber.api.groovy.Hooks.Before
  */
 
 SERVER_ADDRESS = "http://localhost:8888"
+DATE_FORMAT = /\d{4}-\d{2}-\d{2}/
 
 def customer
 def loan
@@ -64,7 +65,13 @@ Then(~'^interest gets increased by factor of ([^"]*)$') { BigDecimal factor ->
 }
 
 Then(~'^term is extended for (\\d+) days$') { int daysCount ->
-    //TODO(dst), 6/13/14: impl
+    oldDeadline = loan.deadline
+
+    // Get updated loan
+    extendedLoan = getJson(loanLocation)
+    newDeadline = extendedLoan.deadline
+
+    assert newDeadline == oldDeadline
 }
 
 When(~'^customer wants to see his loan$') { ->
@@ -75,6 +82,8 @@ Then(~'^he can see loan$') { ->
     assert loan.id == loanId
     assert loan.amount == loanReq.amount
     assert loan.interest > 0
+    assert loan.start ==~ DATE_FORMAT
+    assert loan.end ==~ DATE_FORMAT
 }
 
 Given(~'^loan has extension$') { ->
@@ -88,7 +97,7 @@ Then(~'^he can see extension$') { ->
     assert loan.extensions
     assert loan.extensions.size() == 1
     assert loan.extensions[0].id == extensionId
-    assert loan.extensions[0].creationTime
+    assert loan.extensions[0].creationTime ==~ DATE_FORMAT
 }
 
 private Response createCustomer(Customer customer) {

@@ -48,7 +48,7 @@ public class TestDataFixture {
 
         Loan loan = new Loan();
         loan.setAmount(amount);
-        loan.setInterest(BigDecimal.ONE);
+        loan.setInterest(TEN);
         loan.setApplicationTime(start);
         loan.setDeadline(end);
         loan.setIp(IP);
@@ -76,5 +76,13 @@ public class TestDataFixture {
 
     public static LocalDateTime day() {
         return LocalDateTime.now().withHour(12);
+    }
+
+    public static LocalDateTime hour(int hours) {
+        return LocalDateTime.now()
+                .withHour(hours)
+                .withMinute(0)
+                .withSecond(0)
+                .withNano(0);
     }
 }

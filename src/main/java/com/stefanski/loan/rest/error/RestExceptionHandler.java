@@ -31,10 +31,9 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(RiskTooHighException.class)
     public ResponseEntity<ErrorMessage> handleRiskTooHighException(RiskTooHighException ex) {
-        log.info("Loan not issued because of: {}", ex.getMessage());
+        log.info("Loan forbidden because of too high risk: {}", ex.getMessage());
         ErrorMessage error = new ErrorMessage(ex.getMessage());
-        //TODO(dst), 6/9/14: is the status code correct?
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

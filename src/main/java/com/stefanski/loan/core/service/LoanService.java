@@ -29,6 +29,12 @@ public class LoanService {
     @Value("${system.loan.interest}")
     private BigDecimal loanInterest;
 
+    @Value("${system.loan.ext.days}")
+    private int extensionDays;
+
+    @Value("${system.loan.ext.interest}")
+    private BigDecimal extensionInterest;
+
     @Autowired
     private CustomerService customerService;
 
@@ -81,9 +87,8 @@ public class LoanService {
         extension = extensionRepository.save(extension);
         log.info("Created extension: {}", extension);
 
-        //TODO: take from configuration both
-        loan.extendDeadline(7);
-        loan.multipleInterest(new BigDecimal("1.5"));
+        loan.extendDeadline(getExtensionDays());
+        loan.multipleInterest(getExtensionInterest());
         loanRepository.save(loan);
 
         return extension.getId();
@@ -105,4 +110,25 @@ public class LoanService {
     private BigDecimal getLoanInterest() {
         return loanInterest;
     }
+
+    private int getExtensionDays() {
+        return extensionDays;
+    }
+
+    private BigDecimal getExtensionInterest() {
+        return extensionInterest;
+    }
+
+    public void setLoanInterest(BigDecimal loanInterest) {
+        this.loanInterest = loanInterest;
+    }
+
+    public void setExtensionDays(int extensionDays) {
+        this.extensionDays = extensionDays;
+    }
+
+    public void setExtensionInterest(BigDecimal extensionInterest) {
+        this.extensionInterest = extensionInterest;
+    }
+
 }

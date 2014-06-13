@@ -9,13 +9,18 @@ import com.stefanski.loan.core.risk.RiskAnalyser;
 import com.stefanski.loan.rest.model.request.LoanRequest;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import static com.stefanski.loan.util.TestDataFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -41,6 +46,8 @@ public class LoanServiceTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        loanService.setExtensionDays(7);
+        loanService.setExtensionInterest(new BigDecimal("1.5"));
     }
 
     @Test
@@ -87,7 +94,7 @@ public class LoanServiceTest {
     }
 
     @Test
-    public void shouldExtendLoan() throws Exception {
+    public void shouldCreateExtension() throws Exception {
         // given:
         Loan loan = simpleLoan();
         loan.setId(LOAN_ID);
@@ -104,5 +111,49 @@ public class LoanServiceTest {
         assertThat(extensionId).isEqualTo(EXTENSION_ID);
     }
 
-    //TODO(dst), 6/13/14: test for interest and term
+    @Test
+    public void shouldIncreaseLoanInterestAfterExtending() throws Exception {
+        // given:
+        BigDecimal interest = new BigDecimal("12.13");
+        Loan loan = simpleLoan();
+        loan.setInterest(interest);
+        loan.setId(LOAN_ID);
+        when(loanRepository.findOne(LOAN_ID)).thenReturn(loan);
+
+        Extension extension = simpleExtension();
+        extension.setId(EXTENSION_ID);
+        when(extensionRepository.save(any(Extension.class))).thenReturn(extension);
+
+        // when:
+        loanService.extendLoan(LOAN_ID);
+
+        // then:
+        ArgumentCaptor<Loan> loanCapture = ArgumentCaptor.forClass(Loan.class);
+        verify(loanRepository).save(loanCapture.capture());
+        BigDecimal newInterest = loanCapture.getValue().getInterest();
+        assertThat(newInterest).isGreaterThan(interest);
+    }
+
+    @Test
+    public void shouldIncreaseLoanTermAfterExtending() throws Exception {
+        // given:
+        LocalDateTime deadline = LocalDateTime.now();
+        Loan loan = simpleLoan();
+        loan.setDeadline(deadline);
+        loan.setId(LOAN_ID);
+        when(loanRepository.findOne(LOAN_ID)).thenReturn(loan);
+
+        Extension extension = simpleExtension();
+        extension.setId(EXTENSION_ID);
+        when(extensionRepository.save(any(Extension.class))).thenReturn(extension);
+
+        // when:
+        loanService.extendLoan(LOAN_ID);
+
+        // then:
+        ArgumentCaptor<Loan> loanCapture = ArgumentCaptor.forClass(Loan.class);
+        verify(loanRepository).save(loanCapture.capture());
+        LocalDateTime newDeadline = loanCapture.getValue().getDeadline();
+        assertThat(newDeadline.isAfter(deadline)).isTrue();
+    }
 }

@@ -3,6 +3,7 @@ package com.stefanski.loan.rest.controller;
 import com.stefanski.loan.core.domain.Customer;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.service.CustomerService;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -19,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author Dariusz Stefanski
  */
-public class CustomerControllerIntegrationTest extends ControllerIntegrationTest {
+public class CustomerControllerTest extends ControllerIntegrationTest {
 
     @Mock
     private CustomerService customerService;
@@ -77,9 +78,8 @@ public class CustomerControllerIntegrationTest extends ControllerIntegrationTest
         when(customerService.create(customer)).thenReturn(CUSTOMER_ID);
 
         mockMvc.perform(postWithJson("/customers", customer))
-                .andExpect(status().isCreated())
-                        //TODO(dst): get rid off http://localhost/
-                .andExpect(header().string("Location", is("http://localhost/customers/" + CUSTOMER_ID)));
+                .andExpect(header().string("Location",
+                        Matchers.endsWith("/customers/" + CUSTOMER_ID)));
     }
 
     @Test

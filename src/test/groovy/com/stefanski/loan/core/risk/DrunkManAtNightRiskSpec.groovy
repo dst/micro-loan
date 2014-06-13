@@ -1,6 +1,7 @@
 package com.stefanski.loan.core.risk
 
 import com.stefanski.loan.core.domain.Loan
+import groovy.util.logging.Slf4j
 import spock.lang.Specification
 
 import static com.stefanski.loan.util.TestDataFixture.*
@@ -10,6 +11,7 @@ import static java.math.BigDecimal.TEN
 /**
  * @author Dariusz Stefanski
  */
+@Slf4j
 class DrunkManAtNightRiskSpec extends Specification {
 
     private static final BigDecimal MAX_AMOUNT = TEN;
@@ -22,6 +24,8 @@ class DrunkManAtNightRiskSpec extends Specification {
     }
 
     def "Should detect risk of drunk man at night when needed"() {
+        log.debug("Checking for time=$time and amount=$amount")
+
         given:
         Loan loan = simpleLoan(amount, time);
 
@@ -36,6 +40,8 @@ class DrunkManAtNightRiskSpec extends Specification {
         night() | belowLimit() | false
         night() | limit()      | true
         night() | aboveLimit() | true
+        hour(0) | limit()      | true
+        hour(6) | limit()      | true
     }
 
     private BigDecimal limit() {
