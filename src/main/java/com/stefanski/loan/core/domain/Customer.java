@@ -27,5 +27,14 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     //TODO(dst), 6/10/14: hashset
     private List<Loan> loans = new LinkedList<>();
+
+    public Customer() {
+
+    }
+
+    public Customer(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }
 

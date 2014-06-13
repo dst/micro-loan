@@ -21,17 +21,11 @@ public class TestDataFixture {
     public static final String IP = "127.0.0.1";
 
     public static Customer simpleCustomer() {
-        Customer customer = new Customer();
-        customer.setFirstName(SIMPLE_FIRST_NAME);
-        customer.setLastName(SIMPLE_LAST_NAME);
-        return customer;
+        return new Customer(SIMPLE_FIRST_NAME, SIMPLE_LAST_NAME);
     }
 
     public static Customer polishCustomer() {
-        Customer customer = new Customer();
-        customer.setFirstName("Mirosław");
-        customer.setLastName("Żółw");
-        return customer;
+        return new Customer("Mirosław", "Żółw");
     }
 
     public static Loan simpleLoan() {
