@@ -95,8 +95,9 @@ sourceSets {
 }
 
 task startServer(type: SpawnProcessTask, dependsOn: 'assemble') {
-    //TODO(dst), 6/8/14: take jar name from jar
-    command "java -jar ${projectDir}/build/libs/micro-loan-0.0.1.jar"
+    def config = "src/testAcceptance/resources/application-accept.properties"
+    def jarFile = "${projectDir}/build/libs/${jar.baseName}-${jar.version}.jar"
+    command "java -jar ${jarFile} --spring.config.location=${config}"
     ready "Started Application"
 }
 

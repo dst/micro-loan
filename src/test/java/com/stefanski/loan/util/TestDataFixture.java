@@ -1,11 +1,14 @@
 package com.stefanski.loan.util;
 
 import com.stefanski.loan.core.domain.Customer;
+import com.stefanski.loan.core.domain.Extension;
 import com.stefanski.loan.core.domain.Loan;
 import com.stefanski.loan.rest.model.request.LoanRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import static java.math.BigDecimal.TEN;
 
 /**
  * @author Dariusz Stefanski
@@ -14,6 +17,7 @@ public class TestDataFixture {
 
     public static final Long CUSTOMER_ID = 123L;
     public static final Long LOAN_ID = 999L;
+    public static final Long EXTENSION_ID = 555L;
 
     public static final String SIMPLE_FIRST_NAME = "John";
     public static final String SIMPLE_LAST_NAME = "Smith";
@@ -29,7 +33,7 @@ public class TestDataFixture {
     }
 
     public static Loan simpleLoan() {
-        return simpleLoanWithAmount(BigDecimal.TEN);
+        return simpleLoanWithAmount(TEN);
     }
 
     public static Loan simpleLoanWithAmount(BigDecimal amount) {
@@ -54,10 +58,16 @@ public class TestDataFixture {
 
     public static LoanRequest simpleLoanReqest() {
         LoanRequest loanReq = new LoanRequest();
-        loanReq.setAmount(BigDecimal.TEN);
+        loanReq.setAmount(TEN);
         loanReq.setDaysCount(30);
         loanReq.setIp(IP);
         return loanReq;
+    }
+
+    public static Extension simpleExtension() {
+        Extension extension = new Extension();
+        extension.setCreationTime(LocalDateTime.now());
+        return extension;
     }
 
     public static LocalDateTime night() {

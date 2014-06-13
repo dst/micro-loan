@@ -25,7 +25,7 @@ For default application.properties:
 
 ## Technology stack
 - back-end: Java 8, Spring Boot, Spring Data, JPA with Hibernate, embedded H2 Database, Lombok, Logback
-- testing: JUnit 4, mockito, AssertJ, MockMvc, Cucumber, Groovy
+- testing: JUnit 4, mockito, AssertJ, MockMvc, Cucumber, Groovy, Spock
 - building/deploying: embedded Apache Tomcat, gradle, JaCoCo
 
 ## Development
@@ -39,6 +39,10 @@ For default application.properties:
 - Add IDE dependency:
     - IDEA: ./gradlew idea
     - Eclipse: ./gradlew eclipse
+
+### TDD with Cucumber
+Run server in debug mode with acceptance test properties. VM options: -Dspring.config.location=src/testAcceptance/resources/application-accept.properties
+Then run RunCukes.groovy.
     
 ### Code coverage
     $ ./gradlew jacocoTestReport

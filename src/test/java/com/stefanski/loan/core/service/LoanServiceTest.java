@@ -1,7 +1,9 @@
 package com.stefanski.loan.core.service;
 
+import com.stefanski.loan.core.domain.Extension;
 import com.stefanski.loan.core.domain.Loan;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
+import com.stefanski.loan.core.repository.ExtensionRepository;
 import com.stefanski.loan.core.repository.LoanRepository;
 import com.stefanski.loan.core.risk.RiskAnalyser;
 import com.stefanski.loan.rest.model.request.LoanRequest;
@@ -29,6 +31,9 @@ public class LoanServiceTest {
 
     @Mock
     private LoanRepository loanRepository;
+
+    @Mock
+    private ExtensionRepository extensionRepository;
 
     @InjectMocks
     private LoanService loanService;
@@ -80,4 +85,24 @@ public class LoanServiceTest {
         // then:
         assertThat(loanId).isEqualTo(LOAN_ID);
     }
+
+    @Test
+    public void shouldExtendLoan() throws Exception {
+        // given:
+        Loan loan = simpleLoan();
+        loan.setId(LOAN_ID);
+        when(loanRepository.findOne(LOAN_ID)).thenReturn(loan);
+
+        Extension extension = simpleExtension();
+        extension.setId(EXTENSION_ID);
+        when(extensionRepository.save(any(Extension.class))).thenReturn(extension);
+
+        // when:
+        Long extensionId = loanService.extendLoan(LOAN_ID);
+
+        // then:
+        assertThat(extensionId).isEqualTo(EXTENSION_ID);
+    }
+
+    //TODO(dst), 6/13/14: test for interest and term
 }

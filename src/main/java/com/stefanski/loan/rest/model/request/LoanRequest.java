@@ -18,4 +18,12 @@ public class LoanRequest {
 
     // Client should not fill this. It will be overridden by controller.
     private String ip;
+
+    public LoanRequest() {
+    }
+
+    public LoanRequest(BigDecimal amount, Integer daysCount) {
+        this.amount = amount;
+        this.daysCount = daysCount;
+    }
 }

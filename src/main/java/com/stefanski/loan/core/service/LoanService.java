@@ -1,9 +1,11 @@
 package com.stefanski.loan.core.service;
 
 import com.stefanski.loan.core.domain.Customer;
+import com.stefanski.loan.core.domain.Extension;
 import com.stefanski.loan.core.domain.Loan;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.ex.RiskTooHighException;
+import com.stefanski.loan.core.repository.ExtensionRepository;
 import com.stefanski.loan.core.repository.LoanRepository;
 import com.stefanski.loan.core.risk.RiskAnalyser;
 import com.stefanski.loan.rest.model.request.LoanRequest;
@@ -11,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -33,7 +36,11 @@ public class LoanService {
     private LoanRepository loanRepository;
 
     @Autowired
+    private ExtensionRepository extensionRepository;
+
+    @Autowired
     private RiskAnalyser riskAnalyser;
+
 
     public Loan findById(Long loanId) throws ResourceNotFoundException {
         Loan loan = loanRepository.findOne(loanId);
@@ -62,6 +69,24 @@ public class LoanService {
     public List<Loan> findCustomerLoans(Long customerId) throws ResourceNotFoundException {
         Customer customer = customerService.findById(customerId);
         return customer.getLoans();
+    }
+
+    @Transactional
+    public Long extendLoan(Long loanId) throws ResourceNotFoundException {
+        Loan loan = findById(loanId);
+
+        Extension extension = new Extension();
+        extension.setCreationTime(LocalDateTime.now());
+        extension.setLoan(loan);
+        extension = extensionRepository.save(extension);
+        log.info("Created extension: {}", extension);
+
+        //TODO: take from configuration both
+        loan.extendDeadline(7);
+        loan.multipleInterest(new BigDecimal("1.5"));
+        loanRepository.save(loan);
+
+        return extension.getId();
     }
 
     private Loan createLoanFromRequest(LoanRequest loanReq) {

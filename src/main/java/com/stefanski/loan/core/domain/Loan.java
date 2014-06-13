@@ -8,6 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Dariusz Stefanski
@@ -39,6 +41,21 @@ public class Loan {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Customer customer;
+
+    @OneToMany(mappedBy = "loan")
+    private List<Extension> extensions = new LinkedList<>();
+
+    public void addExtension(Extension extension) {
+        extensions.add(extension);
+    }
+
+    public void extendDeadline(int days) {
+        setDeadline(deadline.plusDays(days));
+    }
+
+    public void multipleInterest(BigDecimal factor) {
+        setInterest(interest.multiply(factor));
+    }
 
     @Override
     public String toString() {
