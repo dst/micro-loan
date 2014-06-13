@@ -3,6 +3,7 @@ package com.stefanski.loan.rest.error;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.ex.RiskTooHighException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -39,7 +40,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessage> handleValidationError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
-        log.warn("Validation ex: {}", result);
+        log.warn("Validation error: {}", result);
 
         ErrorMessage error = new ErrorMessage();
         error.setMessage("Invalid parameters");
@@ -48,6 +49,17 @@ public class RestExceptionHandler {
                 .map(ParameterError::fromFieldError)
                 .collect(toList());
         error.setDetails(details);
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TypeMismatchException.class)
+    public ResponseEntity<ErrorMessage> handleTypeMismatchException(TypeMismatchException ex) {
+        log.warn("Invalid type of parameter: {}", ex.getMessage());
+
+        ErrorMessage error = new ErrorMessage();
+        error.setMessage("Invalid type of parameter");
+        error.setDetails(ex.getMessage());
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
