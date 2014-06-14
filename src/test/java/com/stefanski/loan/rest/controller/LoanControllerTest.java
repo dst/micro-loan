@@ -16,14 +16,16 @@ import org.mockito.MockitoAnnotations;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-import static com.stefanski.loan.rest.error.ErrorMessage.INVALID_PARAMETERS_MSG;
-import static com.stefanski.loan.rest.error.ErrorMessage.RISK_TOO_HIGH_MSG;
+import static com.stefanski.loan.rest.error.ErrorMessage.INVALID_PARAM_ERR;
+import static com.stefanski.loan.rest.error.ErrorMessage.RISK_TOO_HIGH_ERR;
 import static com.stefanski.loan.util.TestDataFixture.*;
 import static com.stefanski.loan.util.TestHelper.APPLICATION_JSON_UTF8;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -53,10 +55,10 @@ public class LoanControllerTest extends ControllerIntegrationTest {
 
         mockMvc.perform(postWithJson(CUSTOMER_LOANS_URL, loanReq))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message", is(INVALID_PARAMETERS_MSG)))
-                .andExpect(jsonPath("$.details", hasSize(1)))
-                .andExpect(jsonPath("$.details[0].field", is("amount")))
-                .andExpect(jsonPath("$.details[0].message", is("may not be null")));
+                .andExpect(jsonPath("$.error", is(INVALID_PARAM_ERR)))
+                .andExpect(jsonPath("$.message", is("amount may not be null")))
+                .andExpect(jsonPath("$.status", is(BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.timestamp", greaterThan(0L)));
     }
 
     @Test
@@ -69,8 +71,8 @@ public class LoanControllerTest extends ControllerIntegrationTest {
 
         mockMvc.perform(postWithJson(CUSTOMER_LOANS_URL, loanReq))
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.message", is(RISK_TOO_HIGH_MSG)))
-                .andExpect(jsonPath("$.details", is(riskMsg)));
+                .andExpect(jsonPath("$.error", is(RISK_TOO_HIGH_ERR)))
+                .andExpect(jsonPath("$.message", is(riskMsg)));
     }
 
     @Test

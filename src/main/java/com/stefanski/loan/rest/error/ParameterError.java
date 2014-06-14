@@ -11,12 +11,16 @@ class ParameterError {
     private String field;
     private String message;
 
+    public static ParameterError fromFieldError(FieldError error) {
+        return new ParameterError(error.getField(), error.getDefaultMessage());
+    }
+
     public ParameterError(String field, String message) {
         this.field = field;
         this.message = message;
     }
 
-    public static ParameterError fromFieldError(FieldError error) {
-        return new ParameterError(error.getField(), error.getDefaultMessage());
+    public String getDescription() {
+        return String.format("%s %s", field, message);
     }
 }

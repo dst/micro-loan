@@ -10,11 +10,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static com.stefanski.loan.rest.error.ErrorMessage.INVALID_PARAMETERS_MSG;
+import static com.stefanski.loan.rest.error.ErrorMessage.INVALID_PARAM_ERR;
 import static com.stefanski.loan.util.TestDataFixture.*;
 import static com.stefanski.loan.util.TestHelper.APPLICATION_JSON_UTF8;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -43,9 +45,10 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
         mockMvc.perform(postWithJson("/customers", customer))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.message", is(INVALID_PARAMETERS_MSG)))
-                .andExpect(jsonPath("$.details[0].field", is("lastName")))
-                .andExpect(jsonPath("$.details[0].message", is("may not be empty")));
+                .andExpect(jsonPath("$.error", is(INVALID_PARAM_ERR)))
+                .andExpect(jsonPath("$.message", is("lastName may not be empty")))
+                .andExpect(jsonPath("$.status", is(BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.timestamp", greaterThan(0L)));
     }
 
     @Test
@@ -58,7 +61,6 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.id", is(CUSTOMER_ID.intValue())));
     }
-
 
     @Test
     public void shouldCreateCustomerWithPolishLetters() throws Exception {
