@@ -16,3 +16,6 @@ logs
 
 # Here are kept secret keys
 gradle.properties
+
+# Last commit details
+git.properties

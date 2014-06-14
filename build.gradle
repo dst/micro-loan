@@ -34,6 +34,26 @@ jar {
     version = "0.0.1"
 }
 
+task createGitProperties << {
+    def name2cmd = [
+            "git.branch"     : "git rev-parse --abbrev-ref HEAD",
+            "git.commit.id"  : "git rev-parse --short HEAD",
+            "git.commit.time": "git log -1 --format='%cd'"
+    ]
+
+    def file = new File("src/main/resources/git.properties")
+    file.delete()
+
+    name2cmd.each() { name, cmd ->
+        def proc = cmd.execute()
+        proc.waitFor()
+        def line = String.format("%s = %s", name, proc.in.text)
+        file.append(line)
+    }
+}
+
+jar.dependsOn createGitProperties
+
 repositories {
     mavenCentral()
     maven { url "http://repo.spring.io/libs-snapshot" }

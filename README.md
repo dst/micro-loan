@@ -19,8 +19,7 @@ For Windows use gradlew.bat
 
 ## Verification
     $ curl localhost:8888/info
-    
-    output: {"app":{"name":"micro-loan","description":"RESTful web service for micro loans"}}
+    {"app":{"name":"micro-loan","description":"RESTful web service for micro loans"},"git":{"branch":"master","commit":{"id":"abbabea","time":"'Sat Jun 14 20:00:39 2014 +0200'"}}}
 
 ## Technology stack
 - back-end: Java 8, Spring Boot, Spring Data, JPA with Hibernate, embedded H2 Database, Lombok, Logback
