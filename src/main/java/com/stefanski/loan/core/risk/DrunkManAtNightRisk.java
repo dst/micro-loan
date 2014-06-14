@@ -13,7 +13,7 @@ import static java.time.LocalTime.MIDNIGHT;
  * @author Dariusz Stefanski
  */
 @Component
-public class DrunkManAtNightRisk implements Risk {
+class DrunkManAtNightRisk implements Risk {
 
     @Value("${system.loan.maxAmount}")
     private BigDecimal maxAmount;

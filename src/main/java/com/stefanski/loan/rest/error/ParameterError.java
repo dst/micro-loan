@@ -7,7 +7,7 @@ import org.springframework.validation.FieldError;
  * @author Dariusz Stefanski
  */
 @Data
-public class ParameterError {
+class ParameterError {
     private String field;
     private String message;
 

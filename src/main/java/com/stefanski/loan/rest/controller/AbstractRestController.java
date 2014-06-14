@@ -8,7 +8,7 @@ import java.net.URI;
 /**
  * @author Dariusz Stefanski
  */
-public abstract class AbstractRestController {
+abstract class AbstractRestController {
 
     protected HttpHeaders getHttpHeadersWithLocation(String pathSuffix, Object... args) {
         HttpHeaders headers = new HttpHeaders();
