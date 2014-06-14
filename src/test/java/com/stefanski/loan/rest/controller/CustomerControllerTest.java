@@ -3,7 +3,6 @@ package com.stefanski.loan.rest.controller;
 import com.stefanski.loan.core.domain.Customer;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.service.CustomerService;
-import com.stefanski.loan.rest.error.ErrorMessage;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,6 +88,15 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
         when(customerService.findById(CUSTOMER_ID)).thenReturn(new Customer());
 
         mockMvc.perform(get("/customers/{id}", CUSTOMER_ID))
+                .andExpect(status().isOk());
+    }
+
+
+    @Test
+    public void shouldPathWithTrailingSlashBeAccepted() throws Exception {
+        when(customerService.findById(CUSTOMER_ID)).thenReturn(new Customer());
+
+        mockMvc.perform(get("/customers/{id}/", CUSTOMER_ID))
                 .andExpect(status().isOk());
     }
 

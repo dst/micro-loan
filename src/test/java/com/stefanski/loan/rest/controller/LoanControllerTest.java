@@ -94,7 +94,6 @@ public class LoanControllerTest extends ControllerIntegrationTest {
                         Matchers.endsWith(CUSTOMER_LOANS_URL + "/" + LOAN_ID)));
     }
 
-
     @Test
     public void shouldReturnIdForCreatedExtension() throws Exception {
         when(loanService.extendLoan(LOAN_ID)).thenReturn(EXTENSION_ID);
