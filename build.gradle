@@ -110,7 +110,11 @@ sourceSets {
 }
 
 task startServer(type: SpawnProcessTask, dependsOn: 'assemble') {
-    def config = "src/testAcceptance/resources/application-accept.properties"
+    def propFiles = [
+            "src/main/resources/application.properties",
+            "src/testAcceptance/resources/application-accept.properties"
+    ]
+    def config = propFiles.join(",")
     def jarFile = "${projectDir}/build/libs/${jar.baseName}-${jar.version}.jar"
     command "java -jar ${jarFile} --spring.config.location=${config}"
     ready "Started Application"
