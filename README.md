@@ -19,24 +19,27 @@ For Windows use gradlew.bat
 
 ## Verification
     $ curl localhost:8888/info
+    
+    output: {"app":{"name":"micro-loan","description":"RESTful web service for micro loans"}}
 
 ## Technology stack
 - back-end: Java 8, Spring Boot, Spring Data, JPA with Hibernate, embedded H2 Database, Lombok, Logback
 - testing: JUnit 4, mockito, AssertJ, MockMvc, Cucumber, Groovy, Spock
-- building/deploying: embedded Apache Tomcat, gradle, JaCoCo
+- building/deploying: embedded Apache Tomcat, gradle, Heroku
+- code metics: JaCoCo
 
 ## Example session with server
-Add -v for verbose output.
+Server accepts and returns only JSON. Add -v for verbose output.
 
 ### Customer creates account
-    $ curl -H "Content-Type: application/json" -d '{"firstName":"abc", "lastName":"xyz"}' localhost:8888/customers
+    $ curl -H "Content-Type: application/json" -d '{"firstName":"Jan", "lastName":"Kowalski"}' localhost:8888/customers
     
     output: {"id":1}
 
 ### Customer views his account
     $ curl localhost:8888/customers/1
     
-    output: {"id":1,"firstName":"abc","lastName":"xyz"}
+    output: {"id":1,"firstName":"Jan","lastName":"Kowalski"}
 
 ### Customer loans 1000 PLN for 30 days (first loan)
     $ curl -H "Content-Type: application/json" -d '{"amount": 1000.00, "daysCount": 30}' localhost:8888/customers/1/loans
