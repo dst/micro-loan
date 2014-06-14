@@ -1,2 +1,2 @@
 herokuApiKey = YOUR_SECRET_KEY
-herokuAppName = "micro-loan"
+herokuAppName = micro-loan
