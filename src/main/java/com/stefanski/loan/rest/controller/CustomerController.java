@@ -11,11 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -27,16 +24,15 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @Slf4j
 @RequestMapping("/customers")
-@RestController
-public class CustomerController {
+public class CustomerController extends AbstractRestController {
 
     @Autowired
     private CustomerService customerService;
 
     @RequestMapping(method = POST)
-    public ResponseEntity<CreationResp> createCustomer(@Valid @RequestBody Customer customer, UriComponentsBuilder builder) {
+    public ResponseEntity<CreationResp> createCustomer(@Valid @RequestBody Customer customer) {
         Long customerId = customerService.create(customer);
-        HttpHeaders headers = getHttpHeadersForNewCustomer(customerId, builder);
+        HttpHeaders headers = getHttpHeadersWithLocation("/{customerId}", customerId);
         CreationResp creation = new CreationResp(customerId);
         return new ResponseEntity<>(creation, headers, CREATED);
     }
@@ -45,12 +41,5 @@ public class CustomerController {
     public ResponseEntity<Customer> findCustomer(@PathVariable Long customerId) throws ResourceNotFoundException {
         Customer customer = customerService.findById(customerId);
         return new ResponseEntity<>(customer, OK);
-    }
-
-    private HttpHeaders getHttpHeadersForNewCustomer(Long customerId, UriComponentsBuilder builder) {
-        HttpHeaders headers = new HttpHeaders();
-        URI customerUri = builder.path("/customers/{id}").buildAndExpand(customerId).toUri();
-        headers.setLocation(customerUri);
-        return headers;
     }
 }
