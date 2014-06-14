@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -24,11 +25,18 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @Slf4j
 @RequestMapping("/customers")
+@RestController
 public class CustomerController extends AbstractRestController {
 
     @Autowired
     private CustomerService customerService;
 
+    /**
+     * Creates customer
+     *
+     * @param customer customer data
+     * @return id of created customer
+     */
     @RequestMapping(method = POST)
     public ResponseEntity<CreationResp> createCustomer(@Valid @RequestBody Customer customer) {
         Long customerId = customerService.create(customer);
@@ -37,8 +45,17 @@ public class CustomerController extends AbstractRestController {
         return new ResponseEntity<>(creation, headers, CREATED);
     }
 
+    /**
+     * Finds customer with given id
+     *
+     * @param customerId searched id
+     * @return found customer
+     * @throws ResourceNotFoundException if customer was not found
+     */
     @RequestMapping(value = "/{customerId}", method = GET)
-    public ResponseEntity<Customer> findCustomer(@PathVariable Long customerId) throws ResourceNotFoundException {
+    public ResponseEntity<Customer> findCustomer(@PathVariable Long customerId)
+            throws ResourceNotFoundException {
+
         Customer customer = customerService.findById(customerId);
         return new ResponseEntity<>(customer, OK);
     }

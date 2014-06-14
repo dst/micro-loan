@@ -1,7 +1,6 @@
 package com.stefanski.loan.rest.controller;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -9,7 +8,6 @@ import java.net.URI;
 /**
  * @author Dariusz Stefanski
  */
-@RestController
 public abstract class AbstractRestController {
 
     protected HttpHeaders getHttpHeadersWithLocation(String pathSuffix, Object... args) {

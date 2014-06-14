@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -28,12 +29,24 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  * @author Dariusz Stefanski
  */
 @Slf4j
+@RequestMapping("/customers")
+@RestController
 public class LoanController extends AbstractRestController {
 
     @Autowired
     private LoanService loanService;
 
-    @RequestMapping(value = "/customers/{customerId}/loans", method = POST)
+    /**
+     * Creates a loan for a given customer if possible
+     *
+     * @param customerId customer (id) who wants to take a loan
+     * @param loanReq    loan details reported by customer
+     * @param req        http request
+     * @return id of created loan
+     * @throws ResourceNotFoundException if customer was not found
+     * @throws RiskTooHighException      if risk of giving loan to customer is too high
+     */
+    @RequestMapping(value = "/{customerId}/loans", method = POST)
     public ResponseEntity<CreationResp> createLoan(
             @PathVariable Long customerId, @Valid @RequestBody LoanRequest loanReq,
             HttpServletRequest req)
@@ -46,26 +59,51 @@ public class LoanController extends AbstractRestController {
         return new ResponseEntity<>(creation, headers, CREATED);
     }
 
-    @RequestMapping(value = "/customers/{customerId}/loans/{loanId}/extensions", method = POST)
+    /**
+     * Extends a loan
+     *
+     * @param customerId customer (id) who wants to extend a loan
+     * @param loanId     loan (id) which will be extended
+     * @return id of extension
+     * @throws ResourceNotFoundException if a loan was not found
+     */
+    @RequestMapping(value = "/{customerId}/loans/{loanId}/extensions", method = POST)
     public ResponseEntity<CreationResp> createExtension(
             @PathVariable Long customerId, @PathVariable Long loanId)
             throws ResourceNotFoundException {
 
+        // customerId is not needed now, because loans have unique ids in system
         Long extensionId = loanService.extendLoan(loanId);
         HttpHeaders headers = getHttpHeadersWithLocation("/{extensionId}", extensionId);
         CreationResp creation = new CreationResp(extensionId);
         return new ResponseEntity<>(creation, headers, CREATED);
     }
 
-    @RequestMapping(value = "/customers/{customerId}/loans/{loanId}", method = GET)
+    /**
+     * Finds loan with given id
+     *
+     * @param customerId owner (id) of searched loan
+     * @param loanId     id of searched loan
+     * @return found loan
+     * @throws ResourceNotFoundException if loan was not found
+     */
+    @RequestMapping(value = "/{customerId}/loans/{loanId}", method = GET)
     public ResponseEntity<Loan> findLoan(@PathVariable Long customerId, @PathVariable Long loanId)
             throws ResourceNotFoundException {
 
+        // customerId is not needed now, because loans have unique ids in system
         Loan loan = loanService.findById(loanId);
         return new ResponseEntity<>(loan, OK);
     }
 
-    @RequestMapping(value = "/customers/{customerId}/loans", method = GET)
+    /**
+     * Finds all loans belonging to given customer
+     *
+     * @param customerId customer (id) who wants to find his/her loans
+     * @return all loans
+     * @throws ResourceNotFoundException if customer was not found
+     */
+    @RequestMapping(value = "/{customerId}/loans", method = GET)
     public ResponseEntity<List<Loan>> findCustomerLoans(@PathVariable Long customerId)
             throws ResourceNotFoundException {
 
