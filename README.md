@@ -76,11 +76,12 @@ Interest was multiplied by 1.5 and deadline was extended by 7 days.
 ## Heroku deployment
 Automatic deployment is possible for Heroku users, but please be aware that "1x standard dyno"
 has not enough RAM and CPU to start micro-loan app in 60 seconds (boot timeout).
+PX dyno should be used instead.
 
 - Copy gradle.properties.example to gradle.properties
     - Set api key
     - Set app name
 - Create app: $ ./gradlew herokuAppCreate
-- Deploy app: ./gradlew herokuAppDeploy
+- Deploy app: ./gradlew herokuAppDeploy (or "git push heroku master" to be more aware what is going on)
 - Check logs: heroku logs -t
 - RESTful web service waits to serve your requests at address http://your-app-name.herokuapp.com
