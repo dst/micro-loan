@@ -37,6 +37,5 @@ public class Extension {
                 .add("id", id)
                 .add("creationTime", creationTime)
                 .toString();
-
     }
 }

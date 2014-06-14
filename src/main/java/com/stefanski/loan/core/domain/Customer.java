@@ -30,7 +30,6 @@ public class Customer {
     private List<Loan> loans = new LinkedList<>();
 
     public Customer() {
-
     }
 
     public Customer(String firstName, String lastName) {

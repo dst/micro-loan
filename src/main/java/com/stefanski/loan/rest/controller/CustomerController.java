@@ -32,7 +32,7 @@ public class CustomerController extends AbstractRestController {
     private CustomerService customerService;
 
     /**
-     * Creates customer
+     * Creates customer.
      *
      * @param customer customer data
      * @return id of created customer
@@ -46,7 +46,7 @@ public class CustomerController extends AbstractRestController {
     }
 
     /**
-     * Finds customer with given id
+     * Finds customer with given id.
      *
      * @param customerId searched id
      * @return found customer

@@ -4,7 +4,6 @@ import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.ex.RiskTooHighException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +14,7 @@ import java.util.List;
 
 import static com.stefanski.loan.rest.error.ErrorMessage.*;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * @author Dariusz Stefanski
@@ -30,7 +30,7 @@ public class RestExceptionHandler {
         ErrorMessage error = new ErrorMessage(RESOURCE_NOT_FOUND_MSG);
         error.setDetails(ex.getMessage());
 
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(error, NOT_FOUND);
     }
 
     @ExceptionHandler(RiskTooHighException.class)
@@ -40,7 +40,7 @@ public class RestExceptionHandler {
         ErrorMessage error = new ErrorMessage(RISK_TOO_HIGH_MSG);
         error.setDetails(ex.getMessage());
 
-        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(error, FORBIDDEN);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -55,7 +55,7 @@ public class RestExceptionHandler {
                 .collect(toList());
         error.setDetails(details);
 
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, BAD_REQUEST);
     }
 
     @ExceptionHandler(TypeMismatchException.class)
@@ -65,7 +65,7 @@ public class RestExceptionHandler {
         ErrorMessage error = new ErrorMessage(INVALID_TYPE_MSG);
         // We have not sensible details
 
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
@@ -75,6 +75,6 @@ public class RestExceptionHandler {
         ErrorMessage error = new ErrorMessage(INTERNAL_ERROR_MSG);
         // We have not sensible details
 
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(error, INTERNAL_SERVER_ERROR);
     }
 }

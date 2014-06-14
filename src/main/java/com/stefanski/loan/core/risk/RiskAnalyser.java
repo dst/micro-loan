@@ -18,6 +18,12 @@ public class RiskAnalyser {
     @Autowired
     private List<Risk> rules;
 
+    /**
+     * Validates a given loan according to specified rules.
+     *
+     * @param loan validated load
+     * @throws RiskTooHighException if at least one risk was detected
+     */
     public void validate(Loan loan) throws RiskTooHighException {
         for (Risk rule : rules) {
             log.debug("Checking {}", rule.getName());

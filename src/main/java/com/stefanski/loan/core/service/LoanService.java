@@ -23,6 +23,7 @@ import java.util.List;
  * @author Dariusz Stefanski
  */
 @Slf4j
+@Transactional
 @Service
 public class LoanService {
 
@@ -54,10 +55,14 @@ public class LoanService {
             String msg = String.format("Loan with id %d does not exist", loanId);
             throw new ResourceNotFoundException(msg);
         }
+
+        log.debug("Found loan: {}", loan);
         return loan;
     }
 
-    public Long applyForLoan(Long customerId, LoanRequest loanReq) throws ResourceNotFoundException, RiskTooHighException {
+    public Long applyForLoan(Long customerId, LoanRequest loanReq)
+            throws ResourceNotFoundException, RiskTooHighException {
+
         Customer customer = customerService.findById(customerId);
 
         Loan loan = createLoanFromRequest(loanReq);
@@ -76,7 +81,6 @@ public class LoanService {
         return customer.getLoans();
     }
 
-    @Transactional
     public Long extendLoan(Long loanId) throws ResourceNotFoundException {
         Loan loan = findById(loanId);
 

@@ -37,7 +37,7 @@ public class LoanController extends AbstractRestController {
     private LoanService loanService;
 
     /**
-     * Creates a loan for a given customer if possible
+     * Creates a loan for a given customer if possible.
      *
      * @param customerId customer (id) who wants to take a loan
      * @param loanReq    loan details reported by customer
@@ -60,7 +60,7 @@ public class LoanController extends AbstractRestController {
     }
 
     /**
-     * Extends a loan
+     * Extends a loan.
      *
      * @param customerId customer (id) who wants to extend a loan
      * @param loanId     loan (id) which will be extended
@@ -80,7 +80,7 @@ public class LoanController extends AbstractRestController {
     }
 
     /**
-     * Finds loan with given id
+     * Finds loan with given id.
      *
      * @param customerId owner (id) of searched loan
      * @param loanId     id of searched loan
@@ -97,7 +97,7 @@ public class LoanController extends AbstractRestController {
     }
 
     /**
-     * Finds all loans belonging to given customer
+     * Finds all loans belonging to given customer.
      *
      * @param customerId customer (id) who wants to find his/her loans
      * @return all loans

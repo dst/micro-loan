@@ -18,8 +18,8 @@ public class LoanRepositoryImpl implements LoanRepositoryCustom {
     private LoanRepository loanRepository;
 
     @Override
-    public long getLoanCountFor(String ip, LocalDate applicationDay) {
-        LocalDateTime start = applicationDay.atStartOfDay();
+    public long getLoanCountFor(String ip, LocalDate day) {
+        LocalDateTime start = day.atStartOfDay();
         LocalDateTime end = start.plusDays(1).minusNanos(1);
         log.debug("Searching loans between {} and {} taken from IP {}", start, end, ip);
         return loanRepository.findByIpAndStartBetween(ip, start, end).size();

@@ -25,8 +25,8 @@ class OfficiousManRisk implements Risk {
 
     @Override
     public boolean isApplicableTo(Loan loan) {
-        LocalDate applicationDay = loan.getStart().toLocalDate();
-        long count = loanRepository.getLoanCountFor(loan.getIp(), applicationDay);
+        LocalDate startDay = loan.getStart().toLocalDate();
+        long count = loanRepository.getLoanCountFor(loan.getIp(), startDay);
         log.debug("{} loans taken in one day from IP {}", count, loan.getIp());
         return count >= loanLimitPerIp;
     }

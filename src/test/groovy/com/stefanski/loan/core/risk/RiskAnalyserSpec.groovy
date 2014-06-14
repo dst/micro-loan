@@ -41,31 +41,12 @@ class RiskAnalyserSpec extends Specification {
             return false
         }
 
-        @Override
-        String getMessage() {
-            return null
-        }
-
-        @Override
-        String getName() {
-            return null
-        }
     }
 
     private class SureRisk implements Risk {
         @Override
         boolean isApplicableTo(Loan loan) {
             return true;
-        }
-
-        @Override
-        String getMessage() {
-            return null
-        }
-
-        @Override
-        String getName() {
-            return null
         }
     }
 }

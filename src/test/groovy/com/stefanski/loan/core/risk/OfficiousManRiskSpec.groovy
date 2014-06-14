@@ -63,5 +63,4 @@ class OfficiousManRiskSpec extends Specification {
         name != null
         name != ""
     }
-
 }

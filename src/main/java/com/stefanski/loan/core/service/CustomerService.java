@@ -6,11 +6,13 @@ import com.stefanski.loan.core.repository.CustomerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Dariusz Stefanski
  */
 @Slf4j
+@Transactional
 @Service
 public class CustomerService {
 
@@ -23,6 +25,8 @@ public class CustomerService {
             String msg = String.format("Customer with id %d does not exist", customerId);
             throw new ResourceNotFoundException(msg);
         }
+
+        log.debug("Found customer: {}", customer);
         return customer;
     }
 

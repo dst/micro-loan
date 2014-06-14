@@ -7,9 +7,25 @@ import com.stefanski.loan.core.domain.Loan;
  */
 interface Risk {
 
+    /**
+     * Checks if this risk is applicable to given loan.
+     *
+     * @param loan
+     * @return true if risk is applicable
+     */
     boolean isApplicableTo(Loan loan);
 
-    String getMessage();
+    /**
+     * @return message displayed to customer
+     */
+    default String getMessage() {
+        return "Risk was detected";
+    }
 
-    String getName();
+    /**
+     * @return name of risk
+     */
+    default String getName() {
+        return getClass().getSimpleName();
+    }
 }
