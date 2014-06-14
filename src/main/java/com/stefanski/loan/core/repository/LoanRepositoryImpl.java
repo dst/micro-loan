@@ -22,6 +22,6 @@ public class LoanRepositoryImpl implements LoanRepositoryCustom {
         LocalDateTime start = applicationDay.atStartOfDay();
         LocalDateTime end = start.plusDays(1).minusNanos(1);
         log.debug("Searching loans between {} and {} taken from IP {}", start, end, ip);
-        return loanRepository.findByIpAndApplicationTimeBetween(ip, start, end).size();
+        return loanRepository.findByIpAndStartBetween(ip, start, end).size();
     }
 }

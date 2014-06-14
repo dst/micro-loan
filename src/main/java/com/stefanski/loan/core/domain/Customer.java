@@ -1,5 +1,6 @@
 package com.stefanski.loan.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -24,6 +25,7 @@ public class Customer {
     @NotEmpty
     private String lastName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "customer")
     private List<Loan> loans = new LinkedList<>();
 

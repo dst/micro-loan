@@ -156,9 +156,9 @@ public class LoanServiceTest {
     @Test
     public void shouldIncreaseLoanTermAfterExtending() throws Exception {
         // given:
-        LocalDateTime deadline = LocalDateTime.now();
+        LocalDateTime end = LocalDateTime.now();
         Loan loan = simpleLoan();
-        loan.setDeadline(deadline);
+        loan.setEnd(end);
         loan.setId(LOAN_ID);
         when(loanRepository.findOne(LOAN_ID)).thenReturn(loan);
 
@@ -172,7 +172,7 @@ public class LoanServiceTest {
         // then:
         ArgumentCaptor<Loan> loanCapture = ArgumentCaptor.forClass(Loan.class);
         verify(loanRepository).save(loanCapture.capture());
-        LocalDateTime newDeadline = loanCapture.getValue().getDeadline();
-        assertThat(newDeadline.isAfter(deadline)).isTrue();
+        LocalDateTime newDeadline = loanCapture.getValue().getEnd();
+        assertThat(newDeadline.isAfter(end)).isTrue();
     }
 }

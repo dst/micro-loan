@@ -100,8 +100,8 @@ public class LoanService {
         Loan loan = new Loan();
         loan.setAmount(loanReq.getAmount());
         loan.setInterest(getLoanInterest());
-        loan.setApplicationTime(begin);
-        loan.setDeadline(end);
+        loan.setStart(begin);
+        loan.setEnd(end);
         loan.setIp(loanReq.getIp());
         return loan;
     }

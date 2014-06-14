@@ -11,9 +11,6 @@ public class ParameterError {
     private String field;
     private String message;
 
-    public ParameterError() {
-    }
-
     public ParameterError(String field, String message) {
         this.field = field;
         this.message = message;

@@ -3,8 +3,11 @@ import com.stefanski.loan.rest.model.request.LoanRequest
 import wslite.rest.RESTClient
 import wslite.rest.Response
 
+import java.time.LocalDate
+
 import static cucumber.api.groovy.EN.*
 import static cucumber.api.groovy.Hooks.Before
+import static java.time.format.DateTimeFormatter.ISO_DATE
 
 /**
  * @author Dariusz Stefanski
@@ -78,13 +81,17 @@ Then(~'^interest gets increased by factor of ([^"]*)$') { BigDecimal factor ->
 }
 
 Then(~'^term is extended for (\\d+) days$') { int daysCount ->
-    oldDeadline = loan.deadline
+    oldEndStr = loan.end
 
     // Get updated loan
     extendedLoan = getJson(loanLocation)
-    newDeadline = extendedLoan.deadline
+    newEndStr = extendedLoan.end
 
-    assert newDeadline == oldDeadline
+
+    oldEnd = LocalDate.parse(oldEndStr, ISO_DATE)
+    newEnd = LocalDate.parse(newEndStr, ISO_DATE)
+
+    assert oldEnd.plusDays(daysCount) == newEnd
 }
 
 Then(~'^he can see loan$') { ->

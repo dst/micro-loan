@@ -42,7 +42,7 @@ public class DrunkManAtNightRisk implements Risk {
     }
 
     private boolean isAppliedAtNight(Loan loan) {
-        LocalTime time = loan.getApplicationTime().toLocalTime();
+        LocalTime time = loan.getStart().toLocalTime();
         assert time != null;
         return isTimeBetween(time, getNightStart(), getNightEnd());
     }

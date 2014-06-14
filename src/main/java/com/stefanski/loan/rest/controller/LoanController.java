@@ -6,7 +6,6 @@ import com.stefanski.loan.core.ex.RiskTooHighException;
 import com.stefanski.loan.core.service.LoanService;
 import com.stefanski.loan.rest.model.request.LoanRequest;
 import com.stefanski.loan.rest.model.response.CreationResp;
-import com.stefanski.loan.rest.model.response.LoanResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +21,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -67,21 +65,19 @@ public class LoanController {
     }
 
     @RequestMapping(value = "/customers/{customerId}/loans/{loanId}", method = GET)
-    public ResponseEntity<LoanResp> findLoan(@PathVariable Long customerId, @PathVariable Long loanId)
+    public ResponseEntity<Loan> findLoan(@PathVariable Long customerId, @PathVariable Long loanId)
             throws ResourceNotFoundException {
 
         Loan loan = loanService.findById(loanId);
-        LoanResp loanResp = LoanResp.fromLoan(loan);
-        return new ResponseEntity<>(loanResp, OK);
+        return new ResponseEntity<>(loan, OK);
     }
 
     @RequestMapping(value = "/customers/{customerId}/loans", method = GET)
-    public ResponseEntity<List<LoanResp>> findCustomerLoans(@PathVariable Long customerId)
+    public ResponseEntity<List<Loan>> findCustomerLoans(@PathVariable Long customerId)
             throws ResourceNotFoundException {
 
         List<Loan> loans = loanService.findCustomerLoans(customerId);
-        List<LoanResp> loanResps = loans.stream().map(LoanResp::fromLoan).collect(toList());
-        return new ResponseEntity<>(loanResps, OK);
+        return new ResponseEntity<>(loans, OK);
     }
 
     private HttpHeaders getHttpHeadersForNewLoan(

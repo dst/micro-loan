@@ -51,7 +51,7 @@ public class LoanRepositoryTest extends RepositoryIntegrationTest {
         LocalDateTime end = now.plusMinutes(30);
 
         // when:
-        List<Loan> loans = loanRepository.findByIpAndApplicationTimeBetween(loan.getIp(), start, end);
+        List<Loan> loans = loanRepository.findByIpAndStartBetween(loan.getIp(), start, end);
 
         // then:
         assertThat(loans).hasSize(2);
@@ -75,15 +75,15 @@ public class LoanRepositoryTest extends RepositoryIntegrationTest {
         assertThat(count).isEqualTo(2);
     }
 
-    private Loan createSimpleLoan(LocalDateTime applicationTime) {
-        if (applicationTime == null) {
-            applicationTime = LocalDateTime.now();
+    private Loan createSimpleLoan(LocalDateTime start) {
+        if (start == null) {
+            start = LocalDateTime.now();
         }
 
         Customer customer = simpleCustomer();
         customer = customerRepository.save(customer);
 
-        Loan loan = simpleLoan(TEN, applicationTime);
+        Loan loan = simpleLoan(TEN, start);
         loan.setCustomer(customer);
         loan = loanRepository.save(loan);
         return loan;

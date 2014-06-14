@@ -143,8 +143,8 @@ public class LoanControllerTest extends ControllerIntegrationTest {
                 .andExpect(jsonPath("$.id", is(loan.getId())))
                 .andExpect(jsonPath("$.amount", is(loan.getAmount().intValue())))
                 .andExpect(jsonPath("$.interest", is(loan.getInterest().intValue())))
-                .andExpect(jsonPath("$.start", is(loan.getApplicationTime().format(ISO_DATE))))
-                .andExpect(jsonPath("$.end", is(loan.getDeadline().format(ISO_DATE))));
+                .andExpect(jsonPath("$.start", is(loan.getStart().format(ISO_DATE))))
+                .andExpect(jsonPath("$.end", is(loan.getEnd().format(ISO_DATE))));
     }
 
     @Test

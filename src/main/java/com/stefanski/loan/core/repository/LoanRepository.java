@@ -13,5 +13,5 @@ public interface LoanRepository extends CrudRepository<Loan, Long>, LoanReposito
 
     List<Loan> findByIp(String ip);
 
-    List<Loan> findByIpAndApplicationTimeBetween(String ip, LocalDateTime start, LocalDateTime end);
+    List<Loan> findByIpAndStartBetween(String ip, LocalDateTime start, LocalDateTime end);
 }

@@ -49,8 +49,8 @@ public class TestDataFixture {
         Loan loan = new Loan();
         loan.setAmount(amount);
         loan.setInterest(TEN);
-        loan.setApplicationTime(start);
-        loan.setDeadline(end);
+        loan.setStart(start);
+        loan.setEnd(end);
         loan.setIp(IP);
         return loan;
     }

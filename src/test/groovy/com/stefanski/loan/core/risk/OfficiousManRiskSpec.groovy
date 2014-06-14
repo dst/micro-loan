@@ -30,7 +30,7 @@ class OfficiousManRiskSpec extends Specification {
         given:
         risk.setLoanLimitPerIp(2)
         def loan = simpleLoan()
-        def day = loan.getApplicationTime().toLocalDate()
+        def day = loan.getStart().toLocalDate()
 
         Mockito.when(loanRepository.getLoanCountFor(loan.getIp(), day)).thenReturn(loanCount)
 
