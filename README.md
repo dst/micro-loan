@@ -6,22 +6,18 @@
 - Java 8
 
 ## Configuration
-Adjust application.properties if needed.
+Default port is 8888. It can be changed in application.properties if needed.
 
 ## Starting server
 For Windows use gradlew.bat
 
 ### Run from gradle
-
     ./gradlew clean bootRun
 
 ### Run the fat jar
-
     java -jar build/libs/micro-loan-0.0.1.jar
 
 ## Verification
-For default application.properties:
-
     $ curl localhost:8888/info
 
 ## Technology stack
@@ -29,45 +25,47 @@ For default application.properties:
 - testing: JUnit 4, mockito, AssertJ, MockMvc, Cucumber, Groovy, Spock
 - building/deploying: embedded Apache Tomcat, gradle, JaCoCo
 
-## Development
+## Example session with server
+Add -v for verbose output.
 
-### IDEA settings
-- Fix Lombok problem when running tests: "Enable annotation processing" in Settings->Compiler->Annotation Processors
-
-### New library
-- Add gradle dependency
-- Download gradle dependency: $ ./gradlew assemble
-- Add IDE dependency:
-    - IDEA: ./gradlew idea
-    - Eclipse: ./gradlew eclipse
-
-### TDD with Cucumber
-Run server in debug mode with acceptance test properties. VM options: -Dspring.config.location=src/testAcceptance/resources/application-accept.properties
-Then run RunCukes.groovy.
+### Customer creates account
+    $ curl -H "Content-Type: application/json" -d '{"firstName":"abc", "lastName":"xyz"}' localhost:8888/customers
     
-### Code coverage
-    $ ./gradlew jacocoTestReport
-    $ browser build/reports/jacoco/test/html/index.html
+    output: {"id":1}
 
-### Acceptance tests
-    $ ./gradlew acceptanceTest
-    $ browser build/reports/cucumber/index.html
+### Customer views his account
+    $ curl localhost:8888/customers/1
+    
+    output: {"id":1,"firstName":"abc","lastName":"xyz"}
 
-## Example session with server:
-### Create customer
-    $ curl -v H "Content-Type: application/json" -d '{"firstName":"abc", "lastName":"xyz"}' localhost:8888/customers
+### Customer loans 1000 PLN for 30 days (first loan)
+    $ curl -H "Content-Type: application/json" -d '{"amount": 1000.00, "daysCount": 30}' localhost:8888/customers/1/loans
+    
+    output: {"id":1}
 
-### View customer
-    $ curl -v localhost:8888/customers/1
+### Customer views first loan
+    $ curl localhost:8888/customers/1/loans/1
+    
+    output: {"id":1,"amount":1000.00,"interest":9.00,"extensions":[],"start":"2014-06-14","end":"2014-07-14"}
+    
+### Customer extends first loan
+    $ curl -H "Content-Type: application/json" -d '{}' localhost:8888/customers/1/loans/1/extensions
+    
+    output: {"id":1}
+    
+### Customer views first loan with extension
+Interest was multiplied by 1.5 and deadline was extended by 7 days.
+ 
+    $ curl localhost:8888/customers/1/loans/1
+    
+    output: {"id":1,"amount":1000.00,"interest":13.50,"extensions":[{"id":1,"creationTime":"2014-06-14"}],"start":"2014-06-14","end":"2014-07-21"}
 
-### Create first loan for customer 1
-    $ curl -H "Content-Type: application/json" -d '{"amount": 10.0}' localhost:8888/customers/1/loans
+### Customer loans 500.50 PLN for 15 days (second loan)
+    $ curl -H "Content-Type: application/json" -d '{"amount": 500.50, "daysCount": 15}' localhost:8888/customers/1/loans
+    
+    output: {"id":2}
 
-### View first loan
-    $ curl localhost:8888/customer/1/loans/1
-
-### Create second loan for customer 1
-    $ curl -H "Content-Type: application/json" -d '{"amount": 20.0}' localhost:8888/customers/1/loans
-
-### View all loans
-    $ curl localhost:8888/customer/1/loans
+### Customer views all loans
+    $ curl localhost:8888/customers/1/loans
+    
+    output: [{"id":1,"amount":1000.00,"interest":13.50,"extensions":[{"id":1,"creationTime":"2014-06-14"}],"start":"2014-06-14","end":"2014-07-21"},{"id":2,"amount":500.50,"interest":9.00,"extensions":[],"start":"2014-06-14","end":"2014-06-29"}]
