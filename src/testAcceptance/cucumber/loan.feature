@@ -30,3 +30,10 @@ Feature: Loans
     When customer wants to see his loan
     Then he can see loan
     And he can see extension
+
+  Scenario: A customer can see his 2 loans
+    Given customer
+    And customer has loan
+    And customer has loan
+    When customer wants to see his loans
+    Then he can see 2 loans

@@ -1,13 +1,20 @@
 import com.stefanski.loan.core.domain.Customer
+import wslite.rest.RESTClient
 import wslite.rest.Response
 
 import static cucumber.api.groovy.EN.*
+import static cucumber.api.groovy.Hooks.Before
 
 /**
  * @author Dariusz Stefanski
  */
 
 def customer
+def response
+
+Before() {
+    client = new RESTClient(Helper.SERVER_ADDRESS)
+}
 
 Given(~'^customer with firstName "([^"]*)" and lastName "([^"]*)"$') { String firstName, String lastName ->
     customer = new Customer(firstName, lastName)

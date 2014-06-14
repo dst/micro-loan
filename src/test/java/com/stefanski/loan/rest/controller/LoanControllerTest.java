@@ -14,10 +14,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
+import static com.stefanski.loan.rest.error.ErrorMessage.INVALID_PARAMETERS_MSG;
+import static com.stefanski.loan.rest.error.ErrorMessage.RISK_TOO_HIGH_MSG;
 import static com.stefanski.loan.util.TestDataFixture.*;
 import static com.stefanski.loan.util.TestHelper.APPLICATION_JSON_UTF8;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -49,7 +53,8 @@ public class LoanControllerTest extends ControllerIntegrationTest {
 
         mockMvc.perform(postWithJson(CUSTOMER_LOANS_URL, loanReq))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message", is("Invalid parameters")))
+                .andExpect(jsonPath("$.message", is(INVALID_PARAMETERS_MSG)))
+                .andExpect(jsonPath("$.details", hasSize(1)))
                 .andExpect(jsonPath("$.details[0].field", is("amount")))
                 .andExpect(jsonPath("$.details[0].message", is("may not be null")));
     }
@@ -64,7 +69,8 @@ public class LoanControllerTest extends ControllerIntegrationTest {
 
         mockMvc.perform(postWithJson(CUSTOMER_LOANS_URL, loanReq))
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.message", is(riskMsg)));
+                .andExpect(jsonPath("$.message", is(RISK_TOO_HIGH_MSG)))
+                .andExpect(jsonPath("$.details", is(riskMsg)));
     }
 
     @Test
@@ -88,8 +94,29 @@ public class LoanControllerTest extends ControllerIntegrationTest {
                         Matchers.endsWith(CUSTOMER_LOANS_URL + "/" + LOAN_ID)));
     }
 
+
     @Test
-    public void shouldViewLoanUseHttpOk() throws Exception {
+    public void shouldReturnIdForCreatedExtension() throws Exception {
+        when(loanService.extendLoan(LOAN_ID)).thenReturn(EXTENSION_ID);
+
+        mockMvc.perform(postWithJson(CUSTOMER_LOANS_URL + "/" + LOAN_ID + "/extensions", null))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is(EXTENSION_ID.intValue())));
+    }
+
+    @Test
+    public void shouldCreateExtensionLocation() throws Exception {
+        when(loanService.extendLoan(LOAN_ID)).thenReturn(EXTENSION_ID);
+
+        String extensionsPath = CUSTOMER_LOANS_URL + "/" + LOAN_ID + "/extensions";
+        mockMvc.perform(postWithJson(extensionsPath, null))
+                .andExpect(header().string("Location",
+                        Matchers.endsWith(extensionsPath + "/" + EXTENSION_ID)));
+    }
+
+    @Test
+    public void shouldFindLoanUseHttpOk() throws Exception {
         when(loanService.findById(LOAN_ID)).thenReturn(new Loan());
 
         mockMvc.perform(get(CUSTOMER_LOANS_URL + "/" + LOAN_ID))
@@ -97,7 +124,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
     }
 
     @Test
-    public void shouldViewLoanUseHttpNotFound() throws Exception {
+    public void shouldFindLoanUseHttpNotFound() throws Exception {
         when(loanService.findById(LOAN_ID)).thenThrow(new ResourceNotFoundException());
 
         mockMvc.perform(get(CUSTOMER_LOANS_URL + "/" + LOAN_ID))
@@ -120,7 +147,6 @@ public class LoanControllerTest extends ControllerIntegrationTest {
                 .andExpect(jsonPath("$.end", is(loan.getDeadline().format(ISO_DATE))));
     }
 
-
     @Test
     public void shouldLoanExtensionRenderCorrectly() throws Exception {
         Extension extension = new Extension();
@@ -135,9 +161,21 @@ public class LoanControllerTest extends ControllerIntegrationTest {
         mockMvc.perform(get(CUSTOMER_LOANS_URL + "/" + LOAN_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.extensions", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.extensions", hasSize(1)))
                 .andExpect(jsonPath("$.extensions[0].id", is(EXTENSION_ID.intValue())))
                 .andExpect(jsonPath("$.extensions[0].creationTime", is(extension.getCreationTime().format(ISO_DATE))));
 
+    }
+
+    @Test
+    public void shouldCustomersRenderCorrectly() throws Exception {
+        Loan loan = simpleLoan();
+        when(loanService.findCustomerLoans(CUSTOMER_ID))
+                .thenReturn(Arrays.asList(loan, loan));
+
+        mockMvc.perform(get(CUSTOMER_LOANS_URL))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$", hasSize(2)));
     }
 }

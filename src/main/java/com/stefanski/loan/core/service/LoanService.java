@@ -68,8 +68,7 @@ public class LoanService {
         Loan createdLoan = loanRepository.save(loan);
         log.info("Created loan: {}", createdLoan);
 
-        Long loanId = createdLoan.getId();
-        return loanId;
+        return createdLoan.getId();
     }
 
     public List<Loan> findCustomerLoans(Long customerId) throws ResourceNotFoundException {

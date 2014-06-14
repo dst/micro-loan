@@ -7,7 +7,7 @@
 
 # Generate reports
 pushd ..
-./gradlew  check jacocoTestReport
+./gradlew clean check jacocoTestReport
 popd
 
 # and open them

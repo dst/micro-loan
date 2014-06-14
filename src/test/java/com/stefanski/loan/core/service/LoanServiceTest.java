@@ -1,5 +1,6 @@
 package com.stefanski.loan.core.service;
 
+import com.stefanski.loan.core.domain.Customer;
 import com.stefanski.loan.core.domain.Extension;
 import com.stefanski.loan.core.domain.Loan;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
@@ -16,6 +17,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.stefanski.loan.util.TestDataFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,6 +51,7 @@ public class LoanServiceTest {
         MockitoAnnotations.initMocks(this);
         loanService.setExtensionDays(7);
         loanService.setExtensionInterest(new BigDecimal("1.5"));
+        loanService.setLoanInterest(new BigDecimal("7.2"));
     }
 
     @Test
@@ -64,6 +68,21 @@ public class LoanServiceTest {
         assertThat(foundLoan).isNotNull();
         assertThat(foundLoan.getId()).isEqualTo(LOAN_ID);
     }
+
+    @Test
+    public void shouldFindCustomerLoans() throws Exception {
+        // given:
+        Customer customer = simpleCustomer();
+        customer.setLoans(Arrays.asList(new Loan(), new Loan()));
+        when(customerService.findById(CUSTOMER_ID)).thenReturn(customer);
+
+        // when:
+        List<Loan> loans = loanService.findCustomerLoans(CUSTOMER_ID);
+
+        // then:
+        assertThat(loans).hasSize(2);
+    }
+
 
     @Test(expected = ResourceNotFoundException.class)
     public void shouldThrowExceptionWhenFindingNotExitstingLoan() throws Exception {

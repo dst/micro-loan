@@ -67,7 +67,7 @@ public class LoanController {
     }
 
     @RequestMapping(value = "/customers/{customerId}/loans/{loanId}", method = GET)
-    public ResponseEntity<LoanResp> viewLoan(@PathVariable Long customerId, @PathVariable Long loanId)
+    public ResponseEntity<LoanResp> findLoan(@PathVariable Long customerId, @PathVariable Long loanId)
             throws ResourceNotFoundException {
 
         Loan loan = loanService.findById(loanId);
@@ -76,7 +76,7 @@ public class LoanController {
     }
 
     @RequestMapping(value = "/customers/{customerId}/loans", method = GET)
-    public ResponseEntity<List<LoanResp>> viewLoans(@PathVariable Long customerId)
+    public ResponseEntity<List<LoanResp>> findCustomerLoans(@PathVariable Long customerId)
             throws ResourceNotFoundException {
 
         List<Loan> loans = loanService.findCustomerLoans(customerId);
@@ -84,12 +84,14 @@ public class LoanController {
         return new ResponseEntity<>(loanResps, OK);
     }
 
+    private HttpHeaders getHttpHeadersForNewLoan(
+            Long loanId, Long customerId,
+            UriComponentsBuilder builder) {
 
-    private HttpHeaders getHttpHeadersForNewLoan(Long loanId, Long customerId, UriComponentsBuilder builder) {
         HttpHeaders headers = new HttpHeaders();
-        URI loanUri = builder.path("/customers/{customerId}/loans/{loanId}")
+        URI uri = builder.path("/customers/{customerId}/loans/{loanId}")
                 .buildAndExpand(customerId, loanId).toUri();
-        headers.setLocation(loanUri);
+        headers.setLocation(uri);
         return headers;
     }
 
@@ -98,9 +100,9 @@ public class LoanController {
             UriComponentsBuilder builder) {
 
         HttpHeaders headers = new HttpHeaders();
-        URI loanUri = builder.path("/customers/{customerId}/loans/{loanId}/extensions/{extensionId}")
+        URI uri = builder.path("/customers/{customerId}/loans/{loanId}/extensions/{extensionId}")
                 .buildAndExpand(customerId, loanId, extentionId).toUri();
-        headers.setLocation(loanUri);
+        headers.setLocation(uri);
         return headers;
     }
 }

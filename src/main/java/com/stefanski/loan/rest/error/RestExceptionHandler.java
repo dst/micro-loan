@@ -10,10 +10,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
+import static com.stefanski.loan.rest.error.ErrorMessage.*;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -24,15 +24,22 @@ import static java.util.stream.Collectors.toList;
 public class RestExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void handleResourceNotFoundException(ResourceNotFoundException ex) {
+    public ResponseEntity<ErrorMessage> handleResourceNotFoundException(ResourceNotFoundException ex) {
         log.warn("Resource not found: {}", ex.getMessage());
+
+        ErrorMessage error = new ErrorMessage(RESOURCE_NOT_FOUND_MSG);
+        error.setDetails(ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(RiskTooHighException.class)
     public ResponseEntity<ErrorMessage> handleRiskTooHighException(RiskTooHighException ex) {
         log.info("Loan forbidden because of too high risk: {}", ex.getMessage());
-        ErrorMessage error = new ErrorMessage(ex.getMessage());
+
+        ErrorMessage error = new ErrorMessage(RISK_TOO_HIGH_MSG);
+        error.setDetails(ex.getMessage());
+
         return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 
@@ -41,8 +48,7 @@ public class RestExceptionHandler {
         BindingResult result = ex.getBindingResult();
         log.warn("Validation error: {}", result);
 
-        ErrorMessage error = new ErrorMessage();
-        error.setMessage("Invalid parameters");
+        ErrorMessage error = new ErrorMessage(INVALID_PARAMETERS_MSG);
         List<ParameterError> details = result.getFieldErrors()
                 .stream()
                 .map(ParameterError::fromFieldError)
@@ -56,9 +62,8 @@ public class RestExceptionHandler {
     public ResponseEntity<ErrorMessage> handleTypeMismatchException(TypeMismatchException ex) {
         log.warn("Invalid type of parameter: {}", ex.getMessage());
 
-        ErrorMessage error = new ErrorMessage();
-        error.setMessage("Invalid type of parameter");
-        error.setDetails(ex.getMessage());
+        ErrorMessage error = new ErrorMessage(INVALID_TYPE_MSG);
+        // We have not sensible details
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
@@ -67,8 +72,8 @@ public class RestExceptionHandler {
     public ResponseEntity<ErrorMessage> handleAnyException(Exception ex) {
         log.error("Not handled exception: {}", ex);
 
-        ErrorMessage error = new ErrorMessage();
-        error.setMessage(ex.getMessage());
+        ErrorMessage error = new ErrorMessage(INTERNAL_ERROR_MSG);
+        // We have not sensible details
 
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }

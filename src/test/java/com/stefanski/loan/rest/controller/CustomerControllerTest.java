@@ -3,6 +3,7 @@ package com.stefanski.loan.rest.controller;
 import com.stefanski.loan.core.domain.Customer;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.service.CustomerService;
+import com.stefanski.loan.rest.error.ErrorMessage;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static com.stefanski.loan.rest.error.ErrorMessage.INVALID_PARAMETERS_MSG;
 import static com.stefanski.loan.util.TestDataFixture.*;
 import static com.stefanski.loan.util.TestHelper.APPLICATION_JSON_UTF8;
 import static org.hamcrest.core.Is.is;
@@ -42,7 +44,7 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
         mockMvc.perform(postWithJson("/customers", customer))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.message", is("Invalid parameters")))
+                .andExpect(jsonPath("$.message", is(INVALID_PARAMETERS_MSG)))
                 .andExpect(jsonPath("$.details[0].field", is("lastName")))
                 .andExpect(jsonPath("$.details[0].message", is("may not be empty")));
     }
@@ -99,7 +101,7 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
     }
 
     @Test
-    public void shouldViewCustomerRenderCorrectly() throws Exception {
+    public void shouldCustomerRenderCorrectly() throws Exception {
         Customer customer = simpleCustomer();
         when(customerService.findById(CUSTOMER_ID)).thenReturn(customer);
 

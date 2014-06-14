@@ -9,6 +9,6 @@ REPORTS_DIR=`pwd`/"../build/reports"
 BROWSER="firefox"
 
 for report in /jacoco/test/html/index.html /tests/index.html /cucumber/index.html; do
-    firefox $REPORTS_DIR/$report
+    firefox ${REPORTS_DIR}/${report}
 done
 
