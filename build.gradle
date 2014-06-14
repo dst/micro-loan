@@ -131,13 +131,16 @@ task acceptanceTest(type: Test) {
 
 check.dependsOn acceptanceTest
 
-if (!project.hasProperty("herokuApiKey")) {
+
+if (!(new File("gradle.properties")).exists()) {
     // gradle.properties is not kept in git, so it is not sent to Heroku
+    print("gradle.properties does not exist")
     herokuApiKey = "dummy-key"
+    herokuAppName = "micro-loan"
 }
 heroku {
     apiKey = herokuApiKey
-    appName = "micro-loan"
+    appName = herokuAppName
 }
 
 // To build as fast as possible on Heroku

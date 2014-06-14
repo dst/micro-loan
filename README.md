@@ -69,3 +69,15 @@ Interest was multiplied by 1.5 and deadline was extended by 7 days.
     $ curl localhost:8888/customers/1/loans
     
     output: [{"id":1,"amount":1000.00,"interest":13.50,"extensions":[{"id":1,"creationTime":"2014-06-14"}],"start":"2014-06-14","end":"2014-07-21"},{"id":2,"amount":500.50,"interest":9.00,"extensions":[],"start":"2014-06-14","end":"2014-06-29"}]
+
+## Heroku deployment
+Automatic deployment is possible for Heroku users, but please be aware that "1x standard dyno"
+has not enough RAM and CPU to start micro-loan app in 60 seconds (boot timeout).
+
+- Copy gradle.properties.example to gradle.properties
+    - Set api key
+    - Set app name
+- Create app: $ ./gradlew herokuAppCreate
+- Deploy app: ./gradlew herokuAppDeploy
+- Check logs: heroku logs -t
+- RESTful web service waits to serve your requests at address http://your-app-name.herokuapp.com
