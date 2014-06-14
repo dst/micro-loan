@@ -32,45 +32,37 @@ Server accepts and returns only JSON. Add -v for verbose output.
 
 ### Customer creates account
     $ curl -H "Content-Type: application/json" -d '{"firstName":"Jan", "lastName":"Kowalski"}' localhost:8888/customers
-    
-    output: {"id":1}
+    {"id":1}
 
 ### Customer views his account
     $ curl localhost:8888/customers/1
-    
-    output: {"id":1,"firstName":"Jan","lastName":"Kowalski"}
+    {"id":1,"firstName":"Jan","lastName":"Kowalski"}
 
 ### Customer loans 1000 PLN for 30 days (first loan)
     $ curl -H "Content-Type: application/json" -d '{"amount": 1000.00, "daysCount": 30}' localhost:8888/customers/1/loans
-    
-    output: {"id":1}
+    {"id":1}
 
 ### Customer views first loan
     $ curl localhost:8888/customers/1/loans/1
-    
-    output: {"id":1,"amount":1000.00,"interest":9.00,"extensions":[],"start":"2014-06-14","end":"2014-07-14"}
+    {"id":1,"amount":1000.00,"interest":9.00,"extensions":[],"start":"2014-06-14","end":"2014-07-14"}
     
 ### Customer extends first loan
     $ curl -H "Content-Type: application/json" -d '{}' localhost:8888/customers/1/loans/1/extensions
-    
-    output: {"id":1}
+    {"id":1}
     
 ### Customer views first loan with extension
 Interest was multiplied by 1.5 and deadline was extended by 7 days.
- 
+
     $ curl localhost:8888/customers/1/loans/1
-    
-    output: {"id":1,"amount":1000.00,"interest":13.50,"extensions":[{"id":1,"creationTime":"2014-06-14"}],"start":"2014-06-14","end":"2014-07-21"}
+    {"id":1,"amount":1000.00,"interest":13.50,"extensions":[{"id":1,"creationTime":"2014-06-14"}],"start":"2014-06-14","end":"2014-07-21"}
 
 ### Customer loans 500.50 PLN for 15 days (second loan)
     $ curl -H "Content-Type: application/json" -d '{"amount": 500.50, "daysCount": 15}' localhost:8888/customers/1/loans
-    
-    output: {"id":2}
+    {"id":2}
 
 ### Customer views all loans
     $ curl localhost:8888/customers/1/loans
-    
-    output: [{"id":1,"amount":1000.00,"interest":13.50,"extensions":[{"id":1,"creationTime":"2014-06-14"}],"start":"2014-06-14","end":"2014-07-21"},{"id":2,"amount":500.50,"interest":9.00,"extensions":[],"start":"2014-06-14","end":"2014-06-29"}]
+    [{"id":1,"amount":1000.00,"interest":13.50,"extensions":[{"id":1,"creationTime":"2014-06-14"}],"start":"2014-06-14","end":"2014-07-21"},{"id":2,"amount":500.50,"interest":9.00,"extensions":[],"start":"2014-06-14","end":"2014-06-29"}]
 
 ## Heroku deployment
 Automatic deployment is possible for Heroku users, but please be aware that "1x standard dyno"
@@ -84,3 +76,14 @@ PX dyno should be used instead.
 - Deploy app: ./gradlew herokuAppDeploy (or "git push heroku master" to be more aware what is going on)
 - Check logs: heroku logs -t
 - RESTful web service waits to serve your requests at address http://your-app-name.herokuapp.com
+
+## Possible extensions
+- Currency (PLN, USD, etc.)
+- JSON/XML negotation
+- HATEOAS
+- I18N for error messages
+- Configuration reloading on demand
+
+## Disclaimer
+All Spring Boot Actuator endpoints are turn on and are available at server port. It is convenience when testing,
+but not recommended in production.
