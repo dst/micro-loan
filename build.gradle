@@ -47,9 +47,19 @@ task createGitProperties << {
     name2cmd.each() { name, cmd ->
         def proc = cmd.execute()
         proc.waitFor()
-        def line = String.format("%s = %s", name, proc.in.text)
+        def value
+        if (proc.exitValue() != 0) {
+            printf "Error when executing %s: %s", cmd, proc.err.text
+            value = "Not available"
+        } else {
+            value = proc.in.text
+        }
+        def line = String.format("%s = %s", name, value)
         file.append(line)
     }
+
+    print "Generated file is:\n"
+    file.readLines().each { line -> println(line) }
 }
 
 jar.dependsOn createGitProperties
@@ -154,7 +164,7 @@ check.dependsOn acceptanceTest
 
 if (!(new File("gradle.properties")).exists()) {
     // gradle.properties is not kept in git, so it is not sent to Heroku
-    print("gradle.properties does not exist")
+    print "gradle.properties does not exist"
     herokuApiKey = "dummy-key"
     herokuAppName = "micro-loan"
 }
