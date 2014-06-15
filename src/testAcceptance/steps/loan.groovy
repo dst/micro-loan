@@ -81,15 +81,11 @@ Then(~'^interest gets increased by factor of ([^"]*)$') { BigDecimal factor ->
 }
 
 Then(~'^term is extended for (\\d+) days$') { int daysCount ->
-    oldEndStr = loan.end
-
-    // Get updated loan
+    // Get extended loan
     extendedLoan = getJson(loanLocation)
-    newEndStr = extendedLoan.end
 
-
-    oldEnd = LocalDate.parse(oldEndStr, ISO_DATE)
-    newEnd = LocalDate.parse(newEndStr, ISO_DATE)
+    oldEnd = LocalDate.parse(loan.end, ISO_DATE)
+    newEnd = LocalDate.parse(extendedLoan.end, ISO_DATE)
 
     assert oldEnd.plusDays(daysCount) == newEnd
 }
