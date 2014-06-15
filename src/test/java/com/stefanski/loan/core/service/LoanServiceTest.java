@@ -101,10 +101,13 @@ public class LoanServiceTest {
         // given:
         Extension ext = new Extension();
         ext.setId(EXTENSION_ID);
+        Loan loan = simpleLoan();
+        loan.setId(LOAN_ID);
+        ext.setLoan(loan);
         when(extensionRepository.findOne(EXTENSION_ID)).thenReturn(ext);
 
         // when:
-        Extension foundExt = loanService.findExtensionById(EXTENSION_ID);
+        Extension foundExt = loanService.findLoanExtension(LOAN_ID, EXTENSION_ID);
 
         // then:
         assertThat(foundExt).isNotNull();
@@ -118,7 +121,7 @@ public class LoanServiceTest {
         when(extensionRepository.findOne(EXTENSION_ID)).thenReturn(null);
 
         // when:
-        loanService.findExtensionById(EXTENSION_ID);
+        loanService.findLoanExtension(LOAN_ID, EXTENSION_ID);
 
         // then:
         // exception should be thrown
@@ -133,7 +136,7 @@ public class LoanServiceTest {
         when(loanRepository.save(any(Loan.class))).thenReturn(loan);
 
         // when:
-        Long loanId = loanService.applyForLoan(CUSTOMER_ID, loanReq);
+        Long loanId = loanService.applyForLoan(loanReq);
 
         // then:
         assertThat(loanId).isEqualTo(LOAN_ID);

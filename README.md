@@ -59,11 +59,11 @@ Server accepts and returns only JSON. Add -v for verbose output.
     }
 
 ### Customer loans 1000 PLN for 30 days (first loan)
-    $ curl -H "Content-Type: application/json" -d '{"amount": 1000.00, "daysCount": 30}' localhost:8888/customers/1/loans
+    $ curl -H "Content-Type: application/json" -d '{"customerId": 1, "amount": 1000.00, "daysCount": 30}' localhost:8888/loans
     {"id":1}
 
 ### Customer views first loan
-    $ curl localhost:8888/customers/1/loans/1
+    $ curl localhost:8888/loans/1
     {
         "id":1,
         "amount":1000.00,
@@ -74,13 +74,13 @@ Server accepts and returns only JSON. Add -v for verbose output.
     }
     
 ### Customer extends first loan
-    $ curl -H "Content-Type: application/json" -d '{}' localhost:8888/customers/1/loans/1/extensions
+    $ curl -H "Content-Type: application/json" -d '{}' localhost:8888/loans/1/extensions
     {"id":1}
     
 ### Customer views first loan with extension
 Interest was multiplied by 1.5 and deadline was extended by 7 days.
 
-    $ curl localhost:8888/customers/1/loans/1
+    $ curl localhost:8888/loans/1
     {
         "id":1,
         "amount":1000.00,
@@ -95,18 +95,18 @@ Interest was multiplied by 1.5 and deadline was extended by 7 days.
         "end":"2014-07-21"}
 
 ### Customer views extension
-    $ curl localhost:8888/customers/1/loans/1/extensions/1
+    $ curl localhost:8888/loans/1/extensions/1
     {
         "id":1,
         "creationTime":"2014-06-14"
     }
 
 ### Customer loans 500.50 PLN for 15 days (second loan)
-    $ curl -H "Content-Type: application/json" -d '{"amount": 500.50, "daysCount": 15}' localhost:8888/customers/1/loans
+    $ curl -H "Content-Type: application/json" -d '{"customerId": 1, "amount": 500.50, "daysCount": 15}' localhost:8888/loans
     {"id":2}
 
-### Customer views all loans
-    $ curl localhost:8888/customers/1/loans
+### Customer views all his loans
+    $ curl localhost:8888/loans?customerId=1
     [
         {
             "id":1,

@@ -26,11 +26,13 @@ Before() {
 Given(~'^customer$') { ->
     customer = new Customer('John', 'Smith')
     response = createCustomer(customer)
-    customerLocation = getLocation(response)
+    assert response.statusCode == 201
+    customerId = response.json.id
+    assert customerId > 0
 }
 
 Given(~'^customer has loan$') { ->
-    loanReq = new LoanRequest(1000, 30)
+    loanReq = new LoanRequest(customerId, 1000, 30)
     response = createLoan(loanReq)
     assert response.statusCode == 201
     loanId = response.json.id
@@ -43,10 +45,11 @@ Given(~'^loan has extension$') { ->
     response = client.post(path: "${loanPath}/extensions") {}
     assert response.statusCode == 201
     extensionId = response.json.id
+    assert extensionId > 0
 }
 
 When(~'^customer wants to loan (\\d+) PLN for (\\d+) days$') { int amount, int daysCount ->
-    loanReq = new LoanRequest(amount, daysCount)
+    loanReq = new LoanRequest(customerId, amount, daysCount)
     response = createLoan(loanReq)
 }
 
@@ -54,6 +57,8 @@ When(~'^customer extends loan$') { ->
     loanPath = location2path(loanLocation)
     response = client.post(path: "${loanPath}/extensions") {}
     assert response.statusCode == 201
+    extensionId = response.json.id
+    assert extensionId > 0
 }
 
 When(~'^customer wants to see his loan$') { ->
@@ -61,7 +66,7 @@ When(~'^customer wants to see his loan$') { ->
 }
 
 When(~'^customer wants to see his loans$') { ->
-    loans = getJson("${customerLocation}/loans")
+    loans = getJson("/loans?customerId=${customerId}")
 }
 
 Then(~'^loan is issued$') { ->
@@ -116,9 +121,8 @@ private Response createCustomer(Customer customer) {
 }
 
 private Response createLoan(LoanRequest loanReq) {
-    customerPath = location2path(customerLocation)
-    client.post(path: "${customerPath}/loans") {
-        json amount: loanReq.amount, daysCount: loanReq.daysCount
+    client.post(path: "/loans") {
+        json customerId: customerId, amount: loanReq.amount, daysCount: loanReq.daysCount
     }
 }
 

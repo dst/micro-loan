@@ -58,6 +58,7 @@ public class TestDataFixture {
 
     public static LoanRequest simpleLoanReqest() {
         LoanRequest loanReq = new LoanRequest();
+        loanReq.setCustomerId(CUSTOMER_ID);
         loanReq.setAmount(TEN);
         loanReq.setDaysCount(30);
         loanReq.setIp(IP);

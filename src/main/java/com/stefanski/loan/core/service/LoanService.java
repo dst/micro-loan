@@ -61,10 +61,16 @@ public class LoanService {
     }
 
 
-    public Extension findExtensionById(Long extensionId) throws ResourceNotFoundException {
+    public Extension findLoanExtension(Long loanId, Long extensionId) throws ResourceNotFoundException {
         Extension ext = extensionRepository.findOne(extensionId);
         if (ext == null) {
             String msg = String.format("Extension with id %d does not exist", extensionId);
+            throw new ResourceNotFoundException(msg);
+        }
+
+        if (!ext.getLoan().getId().equals(loanId)) {
+            String msg = String.format("Extension with id %d which belongs to loan %d does not exist",
+                    extensionId, loanId);
             throw new ResourceNotFoundException(msg);
         }
 
@@ -72,13 +78,10 @@ public class LoanService {
         return ext;
     }
 
-    public Long applyForLoan(Long customerId, LoanRequest loanReq)
+    public Long applyForLoan(LoanRequest loanReq)
             throws ResourceNotFoundException, RiskTooHighException {
 
-        Customer customer = customerService.findById(customerId);
-
         Loan loan = createLoanFromRequest(loanReq);
-        loan.setCustomer(customer);
 
         riskAnalyser.validate(loan);
 
@@ -109,7 +112,7 @@ public class LoanService {
         return extension.getId();
     }
 
-    private Loan createLoanFromRequest(LoanRequest loanReq) {
+    private Loan createLoanFromRequest(LoanRequest loanReq) throws ResourceNotFoundException {
         LocalDateTime begin = LocalDateTime.now();
         LocalDateTime end = begin.plusDays(loanReq.getDaysCount());
 
@@ -119,6 +122,10 @@ public class LoanService {
         loan.setStart(begin);
         loan.setEnd(end);
         loan.setIp(loanReq.getIp());
+
+        Customer customer = customerService.findById(loanReq.getCustomerId());
+        loan.setCustomer(customer);
+
         return loan;
     }
 

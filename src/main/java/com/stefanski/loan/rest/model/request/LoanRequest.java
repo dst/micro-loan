@@ -11,6 +11,9 @@ import java.math.BigDecimal;
 @Data
 public class LoanRequest {
     @NotNull
+    private Long customerId;
+
+    @NotNull
     private BigDecimal amount;
 
     @NotNull
@@ -22,7 +25,8 @@ public class LoanRequest {
     public LoanRequest() {
     }
 
-    public LoanRequest(BigDecimal amount, Integer daysCount) {
+    public LoanRequest(Long customerId, BigDecimal amount, Integer daysCount) {
+        this.customerId = customerId;
         this.amount = amount;
         this.daysCount = daysCount;
     }
