@@ -10,7 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static com.stefanski.loan.rest.error.ErrorMessage.INVALID_PARAM_ERR;
+import static com.stefanski.loan.rest.model.response.ErrorResp.INVALID_PARAM_ERR;
 import static com.stefanski.loan.util.TestDataFixture.*;
 import static com.stefanski.loan.util.TestHelper.APPLICATION_JSON_UTF8;
 import static org.hamcrest.Matchers.greaterThan;
@@ -87,7 +87,7 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
 
     @Test
     public void shouldReturnHttpOkWhenSearchingExistingCustomer() throws Exception {
-        when(customerService.findById(CUSTOMER_ID)).thenReturn(new Customer());
+        when(customerService.findById(CUSTOMER_ID)).thenReturn(simpleCustomer());
 
         mockMvc.perform(get("/customers/{id}", CUSTOMER_ID))
                 .andExpect(status().isOk());
@@ -96,7 +96,7 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
 
     @Test
     public void shouldPathWithTrailingSlashBeAccepted() throws Exception {
-        when(customerService.findById(CUSTOMER_ID)).thenReturn(new Customer());
+        when(customerService.findById(CUSTOMER_ID)).thenReturn(simpleCustomer());
 
         mockMvc.perform(get("/customers/{id}/", CUSTOMER_ID))
                 .andExpect(status().isOk());

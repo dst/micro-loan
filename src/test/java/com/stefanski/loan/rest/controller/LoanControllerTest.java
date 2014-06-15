@@ -16,8 +16,8 @@ import org.mockito.MockitoAnnotations;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-import static com.stefanski.loan.rest.error.ErrorMessage.INVALID_PARAM_ERR;
-import static com.stefanski.loan.rest.error.ErrorMessage.RISK_TOO_HIGH_ERR;
+import static com.stefanski.loan.rest.model.response.ErrorResp.INVALID_PARAM_ERR;
+import static com.stefanski.loan.rest.model.response.ErrorResp.RISK_TOO_HIGH_ERR;
 import static com.stefanski.loan.util.TestDataFixture.*;
 import static com.stefanski.loan.util.TestHelper.APPLICATION_JSON_UTF8;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
@@ -118,7 +118,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
 
     @Test
     public void shouldFindLoanUseHttpOk() throws Exception {
-        when(loanService.findLoanById(LOAN_ID)).thenReturn(new Loan());
+        when(loanService.findLoanById(LOAN_ID)).thenReturn(simpleLoan());
 
         mockMvc.perform(get(CUSTOMER_LOANS_URL + "/" + LOAN_ID))
                 .andExpect(status().isOk());
@@ -166,7 +166,6 @@ public class LoanControllerTest extends ControllerIntegrationTest {
                 .andExpect(jsonPath("$.extensions[0].id", is(EXTENSION_ID.intValue())))
                 .andExpect(jsonPath("$.extensions[0].creationTime", is(extension.getCreationTime().format(ISO_DATE))));
     }
-
 
     @Test
     public void shouldExtensionRenderCorrectly() throws Exception {

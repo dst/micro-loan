@@ -4,6 +4,7 @@ import com.stefanski.loan.core.domain.Customer;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.service.CustomerService;
 import com.stefanski.loan.rest.model.response.CreationResp;
+import com.stefanski.loan.rest.model.response.CustomerResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -53,10 +54,11 @@ public class CustomerController extends AbstractRestController {
      * @throws ResourceNotFoundException if customer was not found
      */
     @RequestMapping(value = "/{customerId}", method = GET)
-    public ResponseEntity<Customer> findCustomer(@PathVariable Long customerId)
+    public ResponseEntity<CustomerResp> findCustomer(@PathVariable Long customerId)
             throws ResourceNotFoundException {
 
         Customer customer = customerService.findById(customerId);
-        return new ResponseEntity<>(customer, OK);
+        CustomerResp resp = CustomerResp.fromCustomer(customer);
+        return new ResponseEntity<>(resp, OK);
     }
 }

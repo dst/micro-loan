@@ -7,6 +7,8 @@ import com.stefanski.loan.core.ex.RiskTooHighException;
 import com.stefanski.loan.core.service.LoanService;
 import com.stefanski.loan.rest.model.request.LoanRequest;
 import com.stefanski.loan.rest.model.response.CreationResp;
+import com.stefanski.loan.rest.model.response.ExtensionResp;
+import com.stefanski.loan.rest.model.response.LoanResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -89,12 +92,13 @@ public class LoanController extends AbstractRestController {
      * @throws ResourceNotFoundException if loan was not found
      */
     @RequestMapping(value = "/{customerId}/loans/{loanId}", method = GET)
-    public ResponseEntity<Loan> findLoan(@PathVariable Long customerId, @PathVariable Long loanId)
+    public ResponseEntity<LoanResp> findLoan(@PathVariable Long customerId, @PathVariable Long loanId)
             throws ResourceNotFoundException {
 
         // customerId is not needed now, because loans have unique ids in system
         Loan loan = loanService.findLoanById(loanId);
-        return new ResponseEntity<>(loan, OK);
+        LoanResp resp = LoanResp.fromLoan(loan);
+        return new ResponseEntity<>(resp, OK);
     }
 
     /**
@@ -105,11 +109,12 @@ public class LoanController extends AbstractRestController {
      * @throws ResourceNotFoundException if customer was not found
      */
     @RequestMapping(value = "/{customerId}/loans", method = GET)
-    public ResponseEntity<List<Loan>> findCustomerLoans(@PathVariable Long customerId)
+    public ResponseEntity<List<LoanResp>> findCustomerLoans(@PathVariable Long customerId)
             throws ResourceNotFoundException {
 
         List<Loan> loans = loanService.findCustomerLoans(customerId);
-        return new ResponseEntity<>(loans, OK);
+        List<LoanResp> resp = loans.stream().map(LoanResp::fromLoan).collect(toList());
+        return new ResponseEntity<>(resp, OK);
     }
 
 
@@ -123,14 +128,15 @@ public class LoanController extends AbstractRestController {
      * @throws ResourceNotFoundException if extension was not found
      */
     @RequestMapping(value = "/{customerId}/loans/{loanId}/extensions/{extensionId}", method = GET)
-    public ResponseEntity<Extension> findExtension(
+    public ResponseEntity<ExtensionResp> findExtension(
             @PathVariable Long customerId,
             @PathVariable Long loanId,
             @PathVariable Long extensionId)
             throws ResourceNotFoundException {
 
         // customerId and loanId are not needed now, because extensions have unique ids in system
-        Extension extension = loanService.findExtensionById(extensionId);
-        return new ResponseEntity<>(extension, OK);
+        Extension ext = loanService.findExtensionById(extensionId);
+        ExtensionResp resp = ExtensionResp.fromExtension(ext);
+        return new ResponseEntity<>(resp, OK);
     }
 }

@@ -1,9 +1,6 @@
 package com.stefanski.loan.core.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Objects;
-import com.stefanski.loan.rest.util.LocalDateTimeSerializer;
 import lombok.Data;
 import org.hibernate.annotations.Type;
 
@@ -32,20 +29,16 @@ public class Loan {
     private BigDecimal interest;
 
     @NotNull
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
     @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
     private LocalDateTime start;
 
     @NotNull
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
     @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
     private LocalDateTime end;
 
-    @JsonIgnore
     @NotNull
     private String ip;
 
-    @JsonIgnore
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Customer customer;
 
