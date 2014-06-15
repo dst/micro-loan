@@ -138,6 +138,7 @@ PX dyno should be used instead.
 - HATEOAS
 - I18N for error messages
 - Configuration reloading on demand
+- CQRS
 
 ## Disclaimer
 All Spring Boot Actuator endpoints are turn on and are available at server port. It is convenience when testing,
