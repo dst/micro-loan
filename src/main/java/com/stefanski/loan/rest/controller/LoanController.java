@@ -1,5 +1,6 @@
 package com.stefanski.loan.rest.controller;
 
+import com.stefanski.loan.core.domain.Extension;
 import com.stefanski.loan.core.domain.Loan;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.ex.RiskTooHighException;
@@ -92,7 +93,7 @@ public class LoanController extends AbstractRestController {
             throws ResourceNotFoundException {
 
         // customerId is not needed now, because loans have unique ids in system
-        Loan loan = loanService.findById(loanId);
+        Loan loan = loanService.findLoanById(loanId);
         return new ResponseEntity<>(loan, OK);
     }
 
@@ -109,5 +110,27 @@ public class LoanController extends AbstractRestController {
 
         List<Loan> loans = loanService.findCustomerLoans(customerId);
         return new ResponseEntity<>(loans, OK);
+    }
+
+
+    /**
+     * Finds extension with given id.
+     *
+     * @param customerId  owner (id) of searched loan
+     * @param loanId      loan (id) which has searched extension
+     * @param extensionId id of searched extension
+     * @return found extension
+     * @throws ResourceNotFoundException if extension was not found
+     */
+    @RequestMapping(value = "/{customerId}/loans/{loanId}/extensions/{extensionId}", method = GET)
+    public ResponseEntity<Extension> findExtension(
+            @PathVariable Long customerId,
+            @PathVariable Long loanId,
+            @PathVariable Long extensionId)
+            throws ResourceNotFoundException {
+
+        // customerId and loanId are not needed now, because extensions have unique ids in system
+        Extension extension = loanService.findExtensionById(extensionId);
+        return new ResponseEntity<>(extension, OK);
     }
 }

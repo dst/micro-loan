@@ -49,7 +49,7 @@ public class LoanService {
     private RiskAnalyser riskAnalyser;
 
 
-    public Loan findById(Long loanId) throws ResourceNotFoundException {
+    public Loan findLoanById(Long loanId) throws ResourceNotFoundException {
         Loan loan = loanRepository.findOne(loanId);
         if (loan == null) {
             String msg = String.format("Loan with id %d does not exist", loanId);
@@ -58,6 +58,18 @@ public class LoanService {
 
         log.debug("Found loan: {}", loan);
         return loan;
+    }
+
+
+    public Extension findExtensionById(Long extensionId) throws ResourceNotFoundException {
+        Extension ext = extensionRepository.findOne(extensionId);
+        if (ext == null) {
+            String msg = String.format("Extension with id %d does not exist", extensionId);
+            throw new ResourceNotFoundException(msg);
+        }
+
+        log.debug("Found extension: {}", ext);
+        return ext;
     }
 
     public Long applyForLoan(Long customerId, LoanRequest loanReq)
@@ -82,7 +94,7 @@ public class LoanService {
     }
 
     public Long extendLoan(Long loanId) throws ResourceNotFoundException {
-        Loan loan = findById(loanId);
+        Loan loan = findLoanById(loanId);
 
         Extension extension = new Extension();
         extension.setCreationTime(LocalDateTime.now());
@@ -133,5 +145,4 @@ public class LoanService {
     public void setExtensionInterest(BigDecimal extensionInterest) {
         this.extensionInterest = extensionInterest;
     }
-
 }

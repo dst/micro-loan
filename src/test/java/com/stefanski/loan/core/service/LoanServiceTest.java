@@ -62,7 +62,7 @@ public class LoanServiceTest {
         when(loanRepository.findOne(LOAN_ID)).thenReturn(loan);
 
         // when:
-        Loan foundLoan = loanService.findById(LOAN_ID);
+        Loan foundLoan = loanService.findLoanById(LOAN_ID);
 
         // then:
         assertThat(foundLoan).isNotNull();
@@ -90,12 +90,39 @@ public class LoanServiceTest {
         when(loanRepository.findOne(LOAN_ID)).thenReturn(null);
 
         // when:
-        loanService.findById(LOAN_ID);
+        loanService.findLoanById(LOAN_ID);
 
         // then:
         // exception should be thrown
     }
 
+    @Test
+    public void shouldFindExtensionIfExists() throws Exception {
+        // given:
+        Extension ext = new Extension();
+        ext.setId(EXTENSION_ID);
+        when(extensionRepository.findOne(EXTENSION_ID)).thenReturn(ext);
+
+        // when:
+        Extension foundExt = loanService.findExtensionById(EXTENSION_ID);
+
+        // then:
+        assertThat(foundExt).isNotNull();
+        assertThat(foundExt.getId()).isEqualTo(EXTENSION_ID);
+    }
+
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void shouldThrowExceptionWhenSearchingNotExistingExtension() throws Exception {
+        // given:
+        when(extensionRepository.findOne(EXTENSION_ID)).thenReturn(null);
+
+        // when:
+        loanService.findExtensionById(EXTENSION_ID);
+
+        // then:
+        // exception should be thrown
+    }
 
     @Test
     public void shouldCreateLoanForValidRequest() throws Exception {

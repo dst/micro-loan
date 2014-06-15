@@ -118,7 +118,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
 
     @Test
     public void shouldFindLoanUseHttpOk() throws Exception {
-        when(loanService.findById(LOAN_ID)).thenReturn(new Loan());
+        when(loanService.findLoanById(LOAN_ID)).thenReturn(new Loan());
 
         mockMvc.perform(get(CUSTOMER_LOANS_URL + "/" + LOAN_ID))
                 .andExpect(status().isOk());
@@ -126,7 +126,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
 
     @Test
     public void shouldFindLoanUseHttpNotFound() throws Exception {
-        when(loanService.findById(LOAN_ID)).thenThrow(new ResourceNotFoundException());
+        when(loanService.findLoanById(LOAN_ID)).thenThrow(new ResourceNotFoundException());
 
         mockMvc.perform(get(CUSTOMER_LOANS_URL + "/" + LOAN_ID))
                 .andExpect(status().isNotFound());
@@ -136,7 +136,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
     public void shouldLoanRenderCorrectly() throws Exception {
         Loan loan = simpleLoan();
 
-        when(loanService.findById(LOAN_ID)).thenReturn(loan);
+        when(loanService.findLoanById(LOAN_ID)).thenReturn(loan);
 
         mockMvc.perform(get(CUSTOMER_LOANS_URL + "/" + LOAN_ID))
                 .andExpect(status().isOk())
@@ -157,7 +157,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
         Loan loan = simpleLoan();
         loan.addExtension(extension);
 
-        when(loanService.findById(LOAN_ID)).thenReturn(loan);
+        when(loanService.findLoanById(LOAN_ID)).thenReturn(loan);
 
         mockMvc.perform(get(CUSTOMER_LOANS_URL + "/" + LOAN_ID))
                 .andExpect(status().isOk())
@@ -165,7 +165,22 @@ public class LoanControllerTest extends ControllerIntegrationTest {
                 .andExpect(jsonPath("$.extensions", hasSize(1)))
                 .andExpect(jsonPath("$.extensions[0].id", is(EXTENSION_ID.intValue())))
                 .andExpect(jsonPath("$.extensions[0].creationTime", is(extension.getCreationTime().format(ISO_DATE))));
+    }
 
+
+    @Test
+    public void shouldExtensionRenderCorrectly() throws Exception {
+        Extension extension = new Extension();
+        extension.setId(EXTENSION_ID);
+        extension.setCreationTime(LocalDateTime.now());
+
+        when(loanService.findExtensionById(EXTENSION_ID)).thenReturn(extension);
+
+        mockMvc.perform(get(CUSTOMER_LOANS_URL + "/" + LOAN_ID + "/extensions/" + EXTENSION_ID))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is(EXTENSION_ID.intValue())))
+                .andExpect(jsonPath("$.creationTime", is(extension.getCreationTime().format(ISO_DATE))));
     }
 
     @Test
