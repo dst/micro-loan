@@ -15,7 +15,7 @@ Run server in debug mode with acceptance test properties.
 VM options: -Dspring.config.location="src/main/resources/application.properties,src/testAcceptance/resources/application-accept.properties"
 Then run RunCukes.groovy.
 
-## Code metrics
+## Code quality
     
 ### Code coverage
     $ ./gradlew jacocoTestReport

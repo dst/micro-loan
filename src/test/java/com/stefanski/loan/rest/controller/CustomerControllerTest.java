@@ -44,7 +44,15 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
         customerReq.setFirstName("John");
 
         mockMvc.perform(postWithJson("/customers", customerReq))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnErrorRespIfLastNameIsMissing() throws Exception {
+        CustomerReq customerReq = new CustomerReq();
+        customerReq.setFirstName("John");
+
+        mockMvc.perform(postWithJson("/customers", customerReq))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.error", is(INVALID_PARAM_ERR)))
                 .andExpect(jsonPath("$.message", is("lastName may not be empty")))
@@ -52,8 +60,9 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
                 .andExpect(jsonPath("$.timestamp", greaterThan(0L)));
     }
 
+
     @Test
-    public void shouldReturnIdForCreatedCustomer() throws Exception {
+    public void shouldReturnIdOfCreatedCustomer() throws Exception {
         CustomerReq customerReq = simpleCustomerReq();
         when(customerService.create(customerReq)).thenReturn(CUSTOMER_ID);
 
@@ -111,14 +120,16 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
     }
 
     @Test
-    public void shouldCustomerRenderCorrectly() throws Exception {
+    public void shouldReturnCorrectCustomer() throws Exception {
         Customer customer = simpleCustomer();
+        customer.setId(CUSTOMER_ID);
         when(customerService.findById(CUSTOMER_ID)).thenReturn(customer);
 
         mockMvc.perform(get("/customers/{id}", CUSTOMER_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.firstName", is(SIMPLE_FIRST_NAME)))
-                .andExpect(jsonPath("$.lastName", is(SIMPLE_LAST_NAME)));
+                .andExpect(jsonPath("$.id", is(customer.getId().intValue())))
+                .andExpect(jsonPath("$.firstName", is(customer.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(customer.getLastName())));
     }
 }

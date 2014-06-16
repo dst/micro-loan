@@ -23,6 +23,7 @@ public class CustomerResp {
 
     public static CustomerResp fromCustomer(Customer customer) {
         CustomerResp resp = new CustomerResp();
+        resp.setId(customer.getId());
         resp.setFirstName(customer.getFirstName());
         resp.setLastName(customer.getLastName());
         return resp;

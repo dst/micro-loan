@@ -4,7 +4,7 @@
 
 RESTful web service for micro loans.
 
-The running instance and documentations are available as [micro-loan app](http://micro-loan.herokuapp.com/) at Heroku.
+The running instance and documentations are available as [micro-loan](http://micro-loan.herokuapp.com/) app at Heroku.
 
 ## System dependencies
 - Java 8
@@ -158,7 +158,9 @@ PX dyno should be used instead.
 
 ## Known issues
 Required info and description in model are missing in Swagger doc, because ApiModelProperty is not yet implemented
-( https://github.com/martypitt/swagger-springmvc/issues/281 ) 
+( https://github.com/martypitt/swagger-springmvc/issues/281 ). Response model is also not available (@ApiResponse, response). 
+
+Git info is not available at Heroku.
 
 ## Disclaimer
 All Spring Boot Actuator endpoints are turn on and are available at server port. It is convenience when testing,

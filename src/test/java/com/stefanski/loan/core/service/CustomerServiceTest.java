@@ -47,15 +47,12 @@ public class CustomerServiceTest {
     }
 
     @Test(expected = ResourceNotFoundException.class)
-    public void shouldThrowExceptionWhenSearchingCustomerWithFakeId() throws Exception {
+    public void shouldThrowExceptionWhenSearchingNonExistingCustomer() throws Exception {
         // given:
         when(customerRepository.findOne(CUSTOMER_ID)).thenReturn(null);
 
         // when:
         customerService.findById(CUSTOMER_ID);
-
-        // then:
-        // exception should be thrown
     }
 
 

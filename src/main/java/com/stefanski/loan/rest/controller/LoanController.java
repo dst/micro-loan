@@ -119,7 +119,6 @@ public class LoanController extends AbstractRestController {
         return new ResponseEntity<>(resp, OK);
     }
 
-
     @RequestMapping(value = "/{loanId}/extensions/{extensionId}", method = GET)
     @ApiOperation(value = "Finds loan extension by ID which is part of the given loan", notes = "Returns an extensions based on ID",
             response = ExtensionResp.class)

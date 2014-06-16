@@ -68,7 +68,7 @@ public class LoanService {
             throw new ResourceNotFoundException(msg);
         }
 
-        if (!ext.getLoan().getId().equals(loanId)) {
+        if (!loanId.equals(ext.getLoan().getId())) {
             String msg = String.format("Extension with id %d which belongs to loan %d does not exist",
                     extensionId, loanId);
             throw new ResourceNotFoundException(msg);
@@ -92,6 +92,10 @@ public class LoanService {
     }
 
     public List<Loan> findCustomerLoans(Long customerId) throws ResourceNotFoundException {
+        if (customerId == null) {
+            throw new ResourceNotFoundException("Customer with empty id does not exist");
+        }
+
         Customer customer = customerService.findById(customerId);
         return customer.getLoans();
     }
@@ -108,6 +112,7 @@ public class LoanService {
         loan.extendDeadline(getExtensionDays());
         loan.multipleInterest(getExtensionInterest());
         loanRepository.save(loan);
+        log.info("Updated loan: {}", loan);
 
         return extension.getId();
     }

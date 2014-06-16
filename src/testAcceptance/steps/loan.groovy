@@ -1,10 +1,10 @@
-import com.stefanski.loan.core.domain.Customer
 import com.stefanski.loan.rest.model.request.LoanReq
 import wslite.rest.RESTClient
 import wslite.rest.Response
 
 import java.time.LocalDate
 
+import static Helper.SERVER_ADDRESS
 import static cucumber.api.groovy.EN.*
 import static cucumber.api.groovy.Hooks.Before
 import static java.time.format.DateTimeFormatter.ISO_DATE
@@ -15,20 +15,10 @@ import static java.time.format.DateTimeFormatter.ISO_DATE
 
 DATE_FORMAT = /\d{4}-\d{2}-\d{2}/
 
-def customer
 def loan
-def loanReq
 
 Before() {
-    client = new RESTClient(Helper.SERVER_ADDRESS)
-}
-
-Given(~'^customer$') { ->
-    customer = new Customer('John', 'Smith')
-    response = createCustomer(customer)
-    assert response.statusCode == 201
-    customerId = response.json.id
-    assert customerId > 0
+    client = new RESTClient(SERVER_ADDRESS)
 }
 
 Given(~'^customer has loan$') { ->
@@ -36,12 +26,13 @@ Given(~'^customer has loan$') { ->
     response = createLoan(loanReq)
     assert response.statusCode == 201
     loanId = response.json.id
-    loanLocation = getLocation(response)
-    loan = getJson(loanLocation)
+    assert loanId > 0
+    loanLocation = Helper.getLocation(response)
+    loan = Helper.getJson(client, loanLocation)
 }
 
 Given(~'^loan has extension$') { ->
-    loanPath = location2path(loanLocation)
+    loanPath = Helper.location2path(loanLocation)
     response = client.post(path: "${loanPath}/extensions") {}
     assert response.statusCode == 201
     extensionId = response.json.id
@@ -54,7 +45,7 @@ When(~'^customer wants to loan (\\d+) PLN for (\\d+) days$') { int amount, int d
 }
 
 When(~'^customer extends loan$') { ->
-    loanPath = location2path(loanLocation)
+    loanPath = Helper.location2path(loanLocation)
     response = client.post(path: "${loanPath}/extensions") {}
     assert response.statusCode == 201
     extensionId = response.json.id
@@ -62,11 +53,11 @@ When(~'^customer extends loan$') { ->
 }
 
 When(~'^customer wants to see his loan$') { ->
-    loan = getJson(loanLocation)
+    loan = Helper.getJson(client, loanLocation)
 }
 
 When(~'^customer wants to see his loans$') { ->
-    loans = getJson("/loans?customerId=${customerId}")
+    loans = Helper.getJson(client, "/loans?customerId=${customerId}")
 }
 
 Then(~'^loan is issued$') { ->
@@ -79,7 +70,7 @@ Then(~'^interest gets increased by factor of ([^"]*)$') { BigDecimal factor ->
     oldInterest = loan.interest
 
     // Get updated loan
-    extendedLoan = getJson(loanLocation)
+    extendedLoan = Helper.getJson(client, loanLocation)
     newInterest = extendedLoan.interest
 
     assert newInterest == oldInterest * factor
@@ -87,7 +78,7 @@ Then(~'^interest gets increased by factor of ([^"]*)$') { BigDecimal factor ->
 
 Then(~'^term is extended for (\\d+) days$') { int daysCount ->
     // Get extended loan
-    extendedLoan = getJson(loanLocation)
+    extendedLoan = Helper.getJson(client, loanLocation)
 
     oldEnd = LocalDate.parse(loan.end, ISO_DATE)
     newEnd = LocalDate.parse(extendedLoan.end, ISO_DATE)
@@ -114,37 +105,8 @@ Then(~'^he can see (\\d+) loans$') { int loanCount ->
     assert loans.size() == 2
 }
 
-private Response createCustomer(Customer customer) {
-    client.post(path: '/customers') {
-        json firstName: customer.firstName, lastName: customer.lastName
-    }
-}
-
 private Response createLoan(LoanReq loanReq) {
     client.post(path: "/loans") {
         json customerId: customerId, amount: loanReq.amount, daysCount: loanReq.daysCount
     }
-}
-
-private String getLocation(Response response) {
-    location = response.getHeaders().get('location')
-    assert location
-    location
-}
-
-private Object getJson(String location) {
-    path = location2path(location)
-    response = client.get(path: path)
-    assert response.statusCode == 200
-    return response.json
-}
-
-/**
- * Get rid off server part from location
- *
- * @param location
- * @return path without server address
- */
-private String location2path(String location) {
-    return location.replaceAll(Helper.SERVER_ADDRESS, "")
 }

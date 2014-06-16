@@ -26,6 +26,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -55,7 +56,18 @@ public class LoanControllerTest extends ControllerIntegrationTest {
         loanReq.setDaysCount(30);
 
         mockMvc.perform(postWithJson(LOANS_PREFIX, loanReq))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnErrorRespIfAmountIsMissing() throws Exception {
+        LoanReq loanReq = new LoanReq();
+        loanReq.setCustomerId(CUSTOMER_ID);
+        loanReq.setDaysCount(30);
+
+        mockMvc.perform(postWithJson(LOANS_PREFIX, loanReq))
                 .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.error", is(INVALID_PARAM_ERR)))
                 .andExpect(jsonPath("$.message", is("amount may not be null")))
                 .andExpect(jsonPath("$.status", is(BAD_REQUEST.value())))
@@ -71,13 +83,28 @@ public class LoanControllerTest extends ControllerIntegrationTest {
                 .thenThrow(new RiskTooHighException(riskMsg));
 
         mockMvc.perform(postWithJson(LOANS_PREFIX, loanReq))
-                .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.error", is(RISK_TOO_HIGH_ERR)))
-                .andExpect(jsonPath("$.message", is(riskMsg)));
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    public void shouldReturnIdForCreatedLoan() throws Exception {
+    public void shouldReturnErrorRespIfRiskIsTooHigh() throws Exception {
+        LoanReq loanReq = simpleLoanReqest();
+
+        String riskMsg = "Risk to high";
+        when(loanService.applyForLoan(loanReq))
+                .thenThrow(new RiskTooHighException(riskMsg));
+
+        mockMvc.perform(postWithJson(LOANS_PREFIX, loanReq))
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.error", is(RISK_TOO_HIGH_ERR)))
+                .andExpect(jsonPath("$.message", is(riskMsg)))
+                .andExpect(jsonPath("$.status", is(FORBIDDEN.value())))
+                .andExpect(jsonPath("$.timestamp", greaterThan(0L)));
+    }
+
+
+    @Test
+    public void shouldReturnIdOfCreatedLoan() throws Exception {
         LoanReq loanReq = simpleLoanReqest();
         when(loanService.applyForLoan(loanReq)).thenReturn(LOAN_ID);
 
@@ -88,7 +115,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
     }
 
     @Test
-    public void shouldCreateLoanLocation() throws Exception {
+    public void shouldCreateLocationToNewLoan() throws Exception {
         LoanReq loanReq = simpleLoanReqest();
         when(loanService.applyForLoan(loanReq)).thenReturn(LOAN_ID);
 
@@ -98,7 +125,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
     }
 
     @Test
-    public void shouldReturnIdForCreatedExtension() throws Exception {
+    public void shouldReturnIdOfCreatedExtension() throws Exception {
         when(loanService.extendLoan(LOAN_ID)).thenReturn(EXTENSION_ID);
 
         mockMvc.perform(postWithJson(LOANS_PREFIX + "/" + LOAN_ID + "/extensions", null))
@@ -108,7 +135,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
     }
 
     @Test
-    public void shouldCreateExtensionLocation() throws Exception {
+    public void shouldCreateLocationToNewExtension() throws Exception {
         when(loanService.extendLoan(LOAN_ID)).thenReturn(EXTENSION_ID);
 
         String extensionsPath = LOANS_PREFIX + "/" + LOAN_ID + "/extensions";
@@ -134,15 +161,16 @@ public class LoanControllerTest extends ControllerIntegrationTest {
     }
 
     @Test
-    public void shouldLoanRenderCorrectly() throws Exception {
+    public void shouldReturnCorrectLoan() throws Exception {
         Loan loan = simpleLoan();
+        loan.setId(LOAN_ID);
 
         when(loanService.findLoanById(LOAN_ID)).thenReturn(loan);
 
         mockMvc.perform(get(LOANS_PREFIX + "/" + LOAN_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.id", is(loan.getId())))
+                .andExpect(jsonPath("$.id", is(loan.getId().intValue())))
                 .andExpect(jsonPath("$.amount", is(loan.getAmount().intValue())))
                 .andExpect(jsonPath("$.interest", is(loan.getInterest().intValue())))
                 .andExpect(jsonPath("$.start", is(loan.getStart().format(ISO_DATE))))
@@ -150,7 +178,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
     }
 
     @Test
-    public void shouldLoanExtensionRenderCorrectly() throws Exception {
+    public void shouldReturnCorrectLoanExtension() throws Exception {
         Extension extension = new Extension();
         extension.setId(EXTENSION_ID);
         extension.setCreationTime(LocalDateTime.now());
@@ -169,7 +197,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
     }
 
     @Test
-    public void shouldExtensionRenderCorrectly() throws Exception {
+    public void shouldReturnCorrectExtension() throws Exception {
         Extension extension = new Extension();
         extension.setId(EXTENSION_ID);
         extension.setCreationTime(LocalDateTime.now());
@@ -184,7 +212,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
     }
 
     @Test
-    public void shouldCustomerLoansRenderCorrectly() throws Exception {
+    public void shouldReturnCorrectCustomerLoans() throws Exception {
         Loan loan = simpleLoan();
         when(loanService.findCustomerLoans(CUSTOMER_ID))
                 .thenReturn(Arrays.asList(loan, loan));

@@ -85,15 +85,12 @@ public class LoanServiceTest {
 
 
     @Test(expected = ResourceNotFoundException.class)
-    public void shouldThrowExceptionWhenFindingNotExitstingLoan() throws Exception {
+    public void shouldThrowExceptionWhenSearchingNotExitstingLoan() throws Exception {
         // given:
         when(loanRepository.findOne(LOAN_ID)).thenReturn(null);
 
         // when:
         loanService.findLoanById(LOAN_ID);
-
-        // then:
-        // exception should be thrown
     }
 
     @Test
@@ -122,9 +119,6 @@ public class LoanServiceTest {
 
         // when:
         loanService.findLoanExtension(LOAN_ID, EXTENSION_ID);
-
-        // then:
-        // exception should be thrown
     }
 
     @Test
@@ -143,7 +137,7 @@ public class LoanServiceTest {
     }
 
     @Test
-    public void shouldCreateExtension() throws Exception {
+    public void shouldReturnIdOfCreatedExtension() throws Exception {
         // given:
         Loan loan = simpleLoan();
         loan.setId(LOAN_ID);
@@ -161,7 +155,7 @@ public class LoanServiceTest {
     }
 
     @Test
-    public void shouldIncreaseLoanInterestAfterExtending() throws Exception {
+    public void shouldIncreaseLoanInterestWhenExtendingLoan() throws Exception {
         // given:
         BigDecimal interest = new BigDecimal("12.13");
         Loan loan = simpleLoan();

@@ -1,6 +1,5 @@
 package com.stefanski.loan.core.domain;
 
-import com.wordnik.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 

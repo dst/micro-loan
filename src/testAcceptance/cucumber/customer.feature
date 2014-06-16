@@ -1,6 +1,6 @@
 Feature: Customers
 
-  Scenario: Customer with Polish letters creation
+  Scenario: Create a customer with Polish letters
     Given customer with firstName "Mirosław" and lastName "Żółw"
     When creation is performed
     Then customer is created
