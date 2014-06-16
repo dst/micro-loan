@@ -157,10 +157,10 @@ PX dyno should be used instead.
 - CQRS
 
 ## Known issues
-Required info and description in model are missing in Swagger doc, because ApiModelProperty is not yet implemented
+- Required info and description in model are missing in Swagger doc, because ApiModelProperty is not yet implemented
 ( https://github.com/martypitt/swagger-springmvc/issues/281 ). Response model is also not available (@ApiResponse, response). 
-
-Git info is not available at Heroku.
+- Broken integration test due to Swagger
+- Git info is not available at Heroku.
 
 ## Disclaimer
 All Spring Boot Actuator endpoints are turn on and are available at server port. It is convenience when testing,
