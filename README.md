@@ -2,6 +2,10 @@
 [![Build Status](https://travis-ci.org/dst/micro-loan.svg)](https://travis-ci.org/dst/micro-loan)
 [![Coverage Status](https://coveralls.io/repos/dst/micro-loan/badge.png)](https://coveralls.io/r/dst/micro-loan)
 
+RESTful web service for micro loans.
+
+The running instance and documentations are available as [micro-loan app](http://micro-loan.herokuapp.com/) at Heroku.
+
 ## System dependencies
 - Java 8
 
