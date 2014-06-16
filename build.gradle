@@ -1,16 +1,6 @@
 import com.wiredforcode.gradle.spawn.KillProcessTask
 import com.wiredforcode.gradle.spawn.SpawnProcessTask
 
-apply plugin: "coveralls"
-apply plugin: "eclipse"
-apply plugin: "groovy"
-apply plugin: "heroku"
-apply plugin: "idea"
-apply plugin: "jacoco"
-apply plugin: "java"
-apply plugin: "spawn"
-apply plugin: "spring-boot"
-
 buildscript {
     repositories {
         mavenCentral()
@@ -26,6 +16,16 @@ buildscript {
     }
 }
 
+apply plugin: "coveralls"
+apply plugin: "eclipse"
+apply plugin: "groovy"
+apply plugin: "heroku"
+apply plugin: "idea"
+apply plugin: "jacoco"
+apply plugin: "java"
+apply plugin: "spawn"
+apply plugin: "spring-boot"
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -34,100 +34,18 @@ jar {
     version = "0.0.1"
 }
 
-task createGitProperties << {
-    def name2cmd = [
-            "git.branch"     : "git rev-parse --abbrev-ref HEAD",
-            "git.commit.id"  : "git rev-parse --short HEAD",
-            "git.commit.time": "git log -1 --format='%cd'"
-    ]
-
-    def file = new File("src/main/resources/git.properties")
-    file.delete()
-
-    name2cmd.each() { name, cmd ->
-        def proc = cmd.execute()
-        proc.waitFor()
-        def value
-        if (proc.exitValue() != 0) {
-            printf "Error when executing %s: %s", cmd, proc.err.text
-            value = "Not available"
-        } else {
-            value = proc.in.text
-        }
-        def line = String.format("%s = %s", name, value)
-        file.append(line)
-    }
-
-    print "Generated file is:\n"
-    file.readLines().each { line -> println(line) }
-}
-
-jar.dependsOn createGitProperties
-
-repositories {
-    mavenCentral()
-    maven { url "http://repo.spring.io/libs-snapshot" }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-}
-
-dependencies {
-    // Spring:
-    compile "com.fasterxml.jackson.core:jackson-databind:2.3.2"
-    compile "org.aspectj:aspectjweaver:1.8.0"
-    compile "org.springframework.boot:spring-boot-starter-actuator:1.0.2.RELEASE"
-    compile "org.springframework.boot:spring-boot-starter-web:1.0.2.RELEASE"
-
-    // Persistence:
-    compile "org.hibernate:hibernate-entitymanager:4.3.5.Final"
-    compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final"
-    compile "org.springframework.data:spring-data-jpa:1.5.2.RELEASE"
-    compile 'org.jadira.usertype:usertype.extended:3.2.0.GA'
-    compile 'org.threeten:threetenbp:0.9'
-
-    // Validation:
-    compile "org.hibernate:hibernate-validator:5.1.1.Final"
-
-    // Groovy:
-    compile "org.codehaus.groovy:groovy-all:2.3.2:indy"
-
-    // Other libs:
-    compile "com.google.guava:guava:17.0"
-    compile "org.projectlombok:lombok:1.14.0"
-
-    // Swagger documentation
-    compile "com.mangofactory:swagger-springmvc:0.8.4-SNAPSHOT"
-
-
-    runtime "com.h2database:h2:1.3.175"
-
-
-    testCompile "com.github.groovy-wslite:groovy-wslite:0.8.0"
-    testCompile "com.jayway.jsonpath:json-path-assert:0.8.1"
-    testCompile 'info.cukes:cucumber-junit:1.1.5'
-    testCompile 'info.cukes:cucumber-groovy:1.1.5'
-    testCompile "junit:junit:4.11"
-    testCompile "org.assertj:assertj-core:1.6.1"
-    testCompile "org.mockito:mockito-core:1.9.5"
-    testCompile "org.springframework:spring-test:4.0.3.RELEASE"
-    testCompile("org.spockframework:spock-core:0.7-groovy-2.0") {
-        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-    }
-}
+apply from: "$rootDir/gradle/codeQuality.gradle"
+apply from: "$rootDir/gradle/createGitProperties.gradle"
+apply from: "$rootDir/gradle/dependencies.gradle"
+apply from: "$rootDir/gradle/heroku.gradle"
 
 task wrapper(type: Wrapper) {
     gradleVersion = '1.11'
 }
 
-jacoco {
-    toolVersion = "0.7.1.201405082137"
-}
+// To build as fast as possible on Heroku
+defaultTasks = ["clean", "assemble"]
 
-jacocoTestReport {
-    reports {
-        xml.enabled = true // coveralls plugin depends on xml format report
-        html.enabled = true
-    }
-}
 
 configurations {
     acceptTestCompile.extendsFrom testCompile
@@ -164,20 +82,3 @@ task acceptanceTest(type: Test) {
 }
 
 check.dependsOn acceptanceTest
-
-
-if (!(new File("gradle.properties")).exists()) {
-    // gradle.properties is not kept in git, so it is not sent to Heroku
-    print "gradle.properties does not exist"
-    ext {
-        herokuApiKey = "dummy-key"
-        herokuAppName = "micro-loan"
-    }
-}
-heroku {
-    apiKey = herokuApiKey
-    appName = herokuAppName
-}
-
-// To build as fast as possible on Heroku
-defaultTasks = ["clean", "assemble"]

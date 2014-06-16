@@ -1,0 +1,12 @@
+if (!(new File("gradle.properties")).exists()) {
+    // gradle.properties is not kept in git, so it is not sent to Heroku
+    print "gradle.properties does not exist"
+    ext {
+        herokuApiKey = "dummy-key"
+        herokuAppName = "micro-loan"
+    }
+}
+heroku {
+    apiKey = herokuApiKey
+    appName = herokuAppName
+}
