@@ -1,4 +1,4 @@
-package com.stefanski.loan;
+package com.stefanski.loan.rest.docs;
 
 import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
 import com.mangofactory.swagger.plugin.EnableSwagger;
