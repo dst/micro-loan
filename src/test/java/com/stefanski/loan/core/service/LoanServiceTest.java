@@ -83,6 +83,11 @@ public class LoanServiceTest {
         assertThat(loans).hasSize(2);
     }
 
+    @Test(expected = ResourceNotFoundException.class)
+    public void shouldThrowExceptionWhenSearchingCustomerLoansForNullId() throws Exception {
+        // when:
+        loanService.findCustomerLoans(null);
+    }
 
     @Test(expected = ResourceNotFoundException.class)
     public void shouldThrowExceptionWhenSearchingNotExitstingLoan() throws Exception {
@@ -111,6 +116,20 @@ public class LoanServiceTest {
         assertThat(foundExt.getId()).isEqualTo(EXTENSION_ID);
     }
 
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void shouldThrowExceptionIfExtensionBelongsToDifferentLoan() throws Exception {
+        // given:
+        Extension ext = new Extension();
+        ext.setId(EXTENSION_ID);
+        Loan loan = simpleLoan();
+        loan.setId(LOAN_ID + 1);
+        ext.setLoan(loan);
+        when(extensionRepository.findOne(EXTENSION_ID)).thenReturn(ext);
+
+        // when:
+        loanService.findLoanExtension(LOAN_ID, EXTENSION_ID);
+    }
 
     @Test(expected = ResourceNotFoundException.class)
     public void shouldThrowExceptionWhenSearchingNotExistingExtension() throws Exception {
