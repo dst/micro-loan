@@ -1,10 +1,9 @@
 package com.stefanski.loan.rest.model.response;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
-
-import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 
 /**
  * Error response compatible with Spring Actuator.
@@ -12,6 +11,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
  * @author Dariusz Stefanski
  */
 @Data
+@ApiModel
 public class ErrorResp {
 
     public static final String INVALID_PARAM_ERR = "Invalid parameter";
@@ -19,9 +19,16 @@ public class ErrorResp {
     public static final String RESOURCE_NOT_FOUND_ERR = "Resource does not exist";
     public static final String RISK_TOO_HIGH_ERR = "Risk of applying load is too high";
 
+    @ApiModelProperty(value = "short error description", required = true)
     private String error;
+
+    @ApiModelProperty(value = "more details about error", required = true)
     private String message;
+
+    @ApiModelProperty(value = "HTTP status code", required = true)
     private int status;
+
+    @ApiModelProperty(value = "timestamp of error", required = true)
     private long timestamp;
 
     public ErrorResp(String error, String message, HttpStatus status) {

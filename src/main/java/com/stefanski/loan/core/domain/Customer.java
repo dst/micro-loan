@@ -1,5 +1,6 @@
 package com.stefanski.loan.core.domain;
 
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -10,8 +11,8 @@ import java.util.List;
 /**
  * @author Dariusz Stefanski
  */
-@Entity
 @Data
+@Entity
 public class Customer {
 
     @Id

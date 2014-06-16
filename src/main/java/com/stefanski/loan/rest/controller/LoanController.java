@@ -5,10 +5,15 @@ import com.stefanski.loan.core.domain.Loan;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.ex.RiskTooHighException;
 import com.stefanski.loan.core.service.LoanService;
-import com.stefanski.loan.rest.model.request.LoanRequest;
+import com.stefanski.loan.rest.model.request.LoanReq;
 import com.stefanski.loan.rest.model.response.CreationResp;
+import com.stefanski.loan.rest.model.response.ErrorResp;
 import com.stefanski.loan.rest.model.response.ExtensionResp;
 import com.stefanski.loan.rest.model.response.LoanResp;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
+import static java.net.HttpURLConnection.*;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -37,18 +43,17 @@ public class LoanController extends AbstractRestController {
     @Autowired
     private LoanService loanService;
 
-    /**
-     * Creates a loan for a given customer if possible.
-     *
-     * @param loanReq loan details reported by customer
-     * @param req     http request
-     * @return id of created loan
-     * @throws ResourceNotFoundException if customer was not found
-     * @throws RiskTooHighException      if risk of giving loan to customer is too high
-     */
     @RequestMapping(value = "", method = POST)
+    @ApiOperation(value = "Creates a new loan for a given customer", notes = "Returns ID of created loan",
+            response = CreationResp.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = HTTP_CREATED, message = "Success"),
+            @ApiResponse(code = HTTP_BAD_REQUEST, message = "Invalid input", response = ErrorResp.class),
+            @ApiResponse(code = HTTP_FORBIDDEN, message = "Risk of giving loan is too high", response = ErrorResp.class)
+    })
     public ResponseEntity<CreationResp> createLoan(
-            @Valid @RequestBody LoanRequest loanReq,
+            @ApiParam(value = "Loan object that needs to be created")
+            @Valid @RequestBody LoanReq loanReq,
             HttpServletRequest req)
             throws ResourceNotFoundException, RiskTooHighException {
 
@@ -59,15 +64,17 @@ public class LoanController extends AbstractRestController {
         return new ResponseEntity<>(creation, headers, CREATED);
     }
 
-    /**
-     * Extends a loan.
-     *
-     * @param loanId loan (id) which will be extended
-     * @return id of extension
-     * @throws ResourceNotFoundException if a loan was not found
-     */
     @RequestMapping(value = "/{loanId}/extensions", method = POST)
-    public ResponseEntity<CreationResp> createExtension(@PathVariable Long loanId)
+    @ApiOperation(value = "Extends a loan with given ID", notes = "Returns ID of extension",
+            response = CreationResp.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = HTTP_CREATED, message = "Success"),
+            @ApiResponse(code = HTTP_BAD_REQUEST, message = "Invalid input", response = ErrorResp.class),
+            @ApiResponse(code = HTTP_NOT_FOUND, message = "Resource not found", response = ErrorResp.class)
+    })
+    public ResponseEntity<CreationResp> createExtension(
+            @ApiParam(value = "ID of loan that needs to be extended")
+            @PathVariable Long loanId)
             throws ResourceNotFoundException {
 
         Long extensionId = loanService.extendLoan(loanId);
@@ -76,15 +83,17 @@ public class LoanController extends AbstractRestController {
         return new ResponseEntity<>(creation, headers, CREATED);
     }
 
-    /**
-     * Finds loan with given id.
-     *
-     * @param loanId id of searched loan
-     * @return found loan
-     * @throws ResourceNotFoundException if loan was not found
-     */
     @RequestMapping(value = "/{loanId}", method = GET)
-    public ResponseEntity<LoanResp> findLoan(@PathVariable Long loanId)
+    @ApiOperation(value = "Finds loan by ID", notes = "Returns a loan based on ID",
+            response = LoanResp.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = HTTP_OK, message = "Success"),
+            @ApiResponse(code = HTTP_BAD_REQUEST, message = "Invalid input", response = ErrorResp.class),
+            @ApiResponse(code = HTTP_NOT_FOUND, message = "Resource not found", response = ErrorResp.class)
+    })
+    public ResponseEntity<LoanResp> findLoan(
+            @ApiParam(value = "ID of loan that needs to be fetched")
+            @PathVariable Long loanId)
             throws ResourceNotFoundException {
 
         Loan loan = loanService.findLoanById(loanId);
@@ -92,35 +101,37 @@ public class LoanController extends AbstractRestController {
         return new ResponseEntity<>(resp, OK);
     }
 
-    /**
-     * Finds all loans belonging to given customer.
-     *
-     * @param customerId customer (id) who wants to find his/her loans
-     * @return all loans
-     * @throws ResourceNotFoundException if customer was not found
-     */
     @RequestMapping(value = "", method = GET)
-    public ResponseEntity<List<LoanResp>> findCustomerLoans(@RequestParam Long customerId)
+    @ApiOperation(value = "Finds all loans belonging to the given customer", notes = "Returns all loans based on owner's ID",
+            response = LoanResp.class, responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = HTTP_OK, message = "Success"),
+            @ApiResponse(code = HTTP_BAD_REQUEST, message = "Invalid input", response = ErrorResp.class),
+            @ApiResponse(code = HTTP_NOT_FOUND, message = "Resource not found", response = ErrorResp.class)
+    })
+    public ResponseEntity<List<LoanResp>> findCustomerLoans(
+            @ApiParam(value = "ID of customer that all his loans needs to be fetched")
+            @RequestParam Long customerId)
             throws ResourceNotFoundException {
 
-        //TODO(dst), 6/16/14: SPR GDY NIC NIE PODA
         List<Loan> loans = loanService.findCustomerLoans(customerId);
         List<LoanResp> resp = loans.stream().map(LoanResp::fromLoan).collect(toList());
         return new ResponseEntity<>(resp, OK);
     }
 
 
-    /**
-     * Finds extension with given id.
-     *
-     * @param loanId      loan (id) which has searched extension
-     * @param extensionId id of searched extension
-     * @return found extension
-     * @throws ResourceNotFoundException if extension was not found
-     */
     @RequestMapping(value = "/{loanId}/extensions/{extensionId}", method = GET)
+    @ApiOperation(value = "Finds loan extension by ID which is part of the given loan", notes = "Returns an extensions based on ID",
+            response = ExtensionResp.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = HTTP_OK, message = "Success"),
+            @ApiResponse(code = HTTP_BAD_REQUEST, message = "Invalid input", response = ErrorResp.class),
+            @ApiResponse(code = HTTP_NOT_FOUND, message = "Resource not found", response = ErrorResp.class)
+    })
     public ResponseEntity<ExtensionResp> findExtension(
+            @ApiParam(value = "ID of loan which contains searched extension")
             @PathVariable Long loanId,
+            @ApiParam(value = "ID of extension that needs to be fetched")
             @PathVariable Long extensionId)
             throws ResourceNotFoundException {
 

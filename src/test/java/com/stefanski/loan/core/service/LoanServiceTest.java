@@ -7,7 +7,7 @@ import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.repository.ExtensionRepository;
 import com.stefanski.loan.core.repository.LoanRepository;
 import com.stefanski.loan.core.risk.RiskAnalyser;
-import com.stefanski.loan.rest.model.request.LoanRequest;
+import com.stefanski.loan.rest.model.request.LoanReq;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -130,7 +130,7 @@ public class LoanServiceTest {
     @Test
     public void shouldCreateLoanForValidRequest() throws Exception {
         // given:
-        LoanRequest loanReq = simpleLoanReqest();
+        LoanReq loanReq = simpleLoanReqest();
         Loan loan = new Loan();
         loan.setId(LOAN_ID);
         when(loanRepository.save(any(Loan.class))).thenReturn(loan);

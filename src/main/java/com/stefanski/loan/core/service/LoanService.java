@@ -8,7 +8,7 @@ import com.stefanski.loan.core.ex.RiskTooHighException;
 import com.stefanski.loan.core.repository.ExtensionRepository;
 import com.stefanski.loan.core.repository.LoanRepository;
 import com.stefanski.loan.core.risk.RiskAnalyser;
-import com.stefanski.loan.rest.model.request.LoanRequest;
+import com.stefanski.loan.rest.model.request.LoanReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -78,7 +78,7 @@ public class LoanService {
         return ext;
     }
 
-    public Long applyForLoan(LoanRequest loanReq)
+    public Long applyForLoan(LoanReq loanReq)
             throws ResourceNotFoundException, RiskTooHighException {
 
         Loan loan = createLoanFromRequest(loanReq);
@@ -112,7 +112,7 @@ public class LoanService {
         return extension.getId();
     }
 
-    private Loan createLoanFromRequest(LoanRequest loanReq) throws ResourceNotFoundException {
+    private Loan createLoanFromRequest(LoanReq loanReq) throws ResourceNotFoundException {
         LocalDateTime begin = LocalDateTime.now();
         LocalDateTime end = begin.plusDays(loanReq.getDaysCount());
 

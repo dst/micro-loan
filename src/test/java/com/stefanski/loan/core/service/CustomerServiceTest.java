@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static com.stefanski.loan.util.TestDataFixture.CUSTOMER_ID;
+import static com.stefanski.loan.util.TestDataFixture.simpleCustomerReq;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -59,14 +60,14 @@ public class CustomerServiceTest {
 
 
     @Test
-    public void shouldCreateCustomer() throws Exception {
+    public void shouldReturnIdOfCreatedCustomer() throws Exception {
         // given:
         Customer customer = new Customer();
         customer.setId(CUSTOMER_ID);
         when(customerRepository.save(any(Customer.class))).thenReturn(customer);
 
         // when:
-        Long customerId = customerService.create(customer);
+        Long customerId = customerService.create(simpleCustomerReq());
 
         // then:
         assertThat(customerId).isEqualTo(CUSTOMER_ID);

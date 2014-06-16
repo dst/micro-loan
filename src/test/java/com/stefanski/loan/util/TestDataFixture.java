@@ -3,7 +3,8 @@ package com.stefanski.loan.util;
 import com.stefanski.loan.core.domain.Customer;
 import com.stefanski.loan.core.domain.Extension;
 import com.stefanski.loan.core.domain.Loan;
-import com.stefanski.loan.rest.model.request.LoanRequest;
+import com.stefanski.loan.rest.model.request.CustomerReq;
+import com.stefanski.loan.rest.model.request.LoanReq;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,8 +29,12 @@ public class TestDataFixture {
         return new Customer(SIMPLE_FIRST_NAME, SIMPLE_LAST_NAME);
     }
 
-    public static Customer polishCustomer() {
-        return new Customer("Mirosław", "Żółw");
+    public static CustomerReq simpleCustomerReq() {
+        return new CustomerReq(SIMPLE_FIRST_NAME, SIMPLE_LAST_NAME);
+    }
+
+    public static CustomerReq polishCustomerReq() {
+        return new CustomerReq("Mirosław", "Żółw");
     }
 
     public static Loan simpleLoan() {
@@ -56,8 +61,8 @@ public class TestDataFixture {
     }
 
 
-    public static LoanRequest simpleLoanReqest() {
-        LoanRequest loanReq = new LoanRequest();
+    public static LoanReq simpleLoanReqest() {
+        LoanReq loanReq = new LoanReq();
         loanReq.setCustomerId(CUSTOMER_ID);
         loanReq.setAmount(TEN);
         loanReq.setDaysCount(30);

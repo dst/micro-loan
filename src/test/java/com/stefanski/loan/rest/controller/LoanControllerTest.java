@@ -5,7 +5,7 @@ import com.stefanski.loan.core.domain.Loan;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.ex.RiskTooHighException;
 import com.stefanski.loan.core.service.LoanService;
-import com.stefanski.loan.rest.model.request.LoanRequest;
+import com.stefanski.loan.rest.model.request.LoanReq;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +50,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
 
     @Test
     public void shouldReturnBadRequestIfAmountIsMissing() throws Exception {
-        LoanRequest loanReq = new LoanRequest();
+        LoanReq loanReq = new LoanReq();
         loanReq.setCustomerId(CUSTOMER_ID);
         loanReq.setDaysCount(30);
 
@@ -64,7 +64,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
 
     @Test
     public void shouldReturnForbiddenIfRiskIsTooHigh() throws Exception {
-        LoanRequest loanReq = simpleLoanReqest();
+        LoanReq loanReq = simpleLoanReqest();
 
         String riskMsg = "Risk to high";
         when(loanService.applyForLoan(loanReq))
@@ -78,7 +78,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
 
     @Test
     public void shouldReturnIdForCreatedLoan() throws Exception {
-        LoanRequest loanReq = simpleLoanReqest();
+        LoanReq loanReq = simpleLoanReqest();
         when(loanService.applyForLoan(loanReq)).thenReturn(LOAN_ID);
 
         mockMvc.perform(postWithJson(LOANS_PREFIX, loanReq))
@@ -89,7 +89,7 @@ public class LoanControllerTest extends ControllerIntegrationTest {
 
     @Test
     public void shouldCreateLoanLocation() throws Exception {
-        LoanRequest loanReq = simpleLoanReqest();
+        LoanReq loanReq = simpleLoanReqest();
         when(loanService.applyForLoan(loanReq)).thenReturn(LOAN_ID);
 
         mockMvc.perform(postWithJson(LOANS_PREFIX, loanReq))

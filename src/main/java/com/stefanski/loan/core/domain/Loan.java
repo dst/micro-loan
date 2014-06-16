@@ -14,8 +14,8 @@ import java.util.List;
 /**
  * @author Dariusz Stefanski
  */
-@Entity
 @Data
+@Entity
 public class Loan {
 
     @Id

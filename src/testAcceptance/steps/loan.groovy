@@ -1,5 +1,5 @@
 import com.stefanski.loan.core.domain.Customer
-import com.stefanski.loan.rest.model.request.LoanRequest
+import com.stefanski.loan.rest.model.request.LoanReq
 import wslite.rest.RESTClient
 import wslite.rest.Response
 
@@ -32,7 +32,7 @@ Given(~'^customer$') { ->
 }
 
 Given(~'^customer has loan$') { ->
-    loanReq = new LoanRequest(customerId, 1000, 30)
+    loanReq = new LoanReq(customerId, 1000, 30)
     response = createLoan(loanReq)
     assert response.statusCode == 201
     loanId = response.json.id
@@ -49,7 +49,7 @@ Given(~'^loan has extension$') { ->
 }
 
 When(~'^customer wants to loan (\\d+) PLN for (\\d+) days$') { int amount, int daysCount ->
-    loanReq = new LoanRequest(customerId, amount, daysCount)
+    loanReq = new LoanReq(customerId, amount, daysCount)
     response = createLoan(loanReq)
 }
 
@@ -120,7 +120,7 @@ private Response createCustomer(Customer customer) {
     }
 }
 
-private Response createLoan(LoanRequest loanReq) {
+private Response createLoan(LoanReq loanReq) {
     client.post(path: "/loans") {
         json customerId: customerId, amount: loanReq.amount, daysCount: loanReq.daysCount
     }

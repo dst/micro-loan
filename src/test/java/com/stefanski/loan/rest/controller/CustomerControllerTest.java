@@ -3,6 +3,7 @@ package com.stefanski.loan.rest.controller;
 import com.stefanski.loan.core.domain.Customer;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.service.CustomerService;
+import com.stefanski.loan.rest.model.request.CustomerReq;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,10 +40,10 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
 
     @Test
     public void shouldReturnBadRequestIfLastNameIsMissing() throws Exception {
-        Customer customer = new Customer();
-        customer.setFirstName("John");
+        CustomerReq customerReq = new CustomerReq();
+        customerReq.setFirstName("John");
 
-        mockMvc.perform(postWithJson("/customers", customer))
+        mockMvc.perform(postWithJson("/customers", customerReq))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.error", is(INVALID_PARAM_ERR)))
@@ -53,10 +54,10 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
 
     @Test
     public void shouldReturnIdForCreatedCustomer() throws Exception {
-        Customer customer = simpleCustomer();
-        when(customerService.create(customer)).thenReturn(CUSTOMER_ID);
+        CustomerReq customerReq = simpleCustomerReq();
+        when(customerService.create(customerReq)).thenReturn(CUSTOMER_ID);
 
-        mockMvc.perform(postWithJson("/customers", customer))
+        mockMvc.perform(postWithJson("/customers", customerReq))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.id", is(CUSTOMER_ID.intValue())));
@@ -64,7 +65,7 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
 
     @Test
     public void shouldCreateCustomerWithPolishLetters() throws Exception {
-        Customer customer = polishCustomer();
+        CustomerReq customer = polishCustomerReq();
 
         when(customerService.create(customer)).thenReturn(CUSTOMER_ID);
 
@@ -76,11 +77,11 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
 
     @Test
     public void shouldCreateCustomerLocation() throws Exception {
-        Customer customer = simpleCustomer();
+        CustomerReq customerReq = simpleCustomerReq();
 
-        when(customerService.create(customer)).thenReturn(CUSTOMER_ID);
+        when(customerService.create(customerReq)).thenReturn(CUSTOMER_ID);
 
-        mockMvc.perform(postWithJson("/customers", customer))
+        mockMvc.perform(postWithJson("/customers", customerReq))
                 .andExpect(header().string("Location",
                         Matchers.endsWith("/customers/" + CUSTOMER_ID)));
     }
@@ -92,7 +93,6 @@ public class CustomerControllerTest extends ControllerIntegrationTest {
         mockMvc.perform(get("/customers/{id}", CUSTOMER_ID))
                 .andExpect(status().isOk());
     }
-
 
     @Test
     public void shouldPathWithTrailingSlashBeAccepted() throws Exception {

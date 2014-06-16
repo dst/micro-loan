@@ -3,6 +3,7 @@ package com.stefanski.loan.core.service;
 import com.stefanski.loan.core.domain.Customer;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.repository.CustomerRepository;
+import com.stefanski.loan.rest.model.request.CustomerReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,9 +31,17 @@ public class CustomerService {
         return customer;
     }
 
-    public Long create(Customer customer) {
+    public Long create(CustomerReq customerReq) {
+        Customer customer = createCustomerFromReq(customerReq);
         Customer createdCustomer = customerRepository.save(customer);
         log.info("Created customer: {}", createdCustomer);
         return createdCustomer.getId();
+    }
+
+    private Customer createCustomerFromReq(CustomerReq req) {
+        Customer customer = new Customer();
+        customer.setFirstName(req.getFirstName());
+        customer.setLastName(req.getLastName());
+        return customer;
     }
 }
