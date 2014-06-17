@@ -2,7 +2,6 @@ package com.stefanski.loan.core.repository;
 
 import com.stefanski.loan.core.domain.Customer;
 import com.stefanski.loan.core.domain.Loan;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Dariusz Stefanski
  */
-@Ignore(value = "Temporary problem with Swagger")
 public class LoanRepositoryTest extends RepositoryIntegrationTest {
 
     @Autowired

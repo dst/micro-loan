@@ -157,7 +157,6 @@ PX dyno should be used instead.
 ## Known issues
 - Required info and description in model are missing in Swagger doc, because ApiModelProperty is not yet implemented
 ( https://github.com/martypitt/swagger-springmvc/issues/281 ). Response model is also not available (@ApiResponse, response). 
-- Broken integration test due to Swagger
 - Git info is not available at Heroku.
 
 ## Disclaimer
