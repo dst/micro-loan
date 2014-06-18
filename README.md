@@ -23,7 +23,7 @@ For Windows use gradlew.bat
     $ curl localhost:8888/info
     {
       "app": {
-        "version":"0.0.1",
+        "version":"0.1",
         "name": "micro-loan",
         "description": "RESTful web service for micro loans"
       },
