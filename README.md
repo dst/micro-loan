@@ -4,6 +4,8 @@
 
 RESTful web service for micro loans.
 
+The running instance and documentations are available as [micro-loan](http://micro-loan.herokuapp.com/) app at Heroku.
+
 ## System dependencies
 - Java 8
 
