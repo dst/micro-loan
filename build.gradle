@@ -31,7 +31,6 @@ targetCompatibility = 1.8
 
 jar {
     baseName = "micro-loan"
-    version = "0.0.1"
 }
 
 apply from: "$rootDir/gradle/codeQuality.gradle"
@@ -67,7 +66,7 @@ task startServer(type: SpawnProcessTask, dependsOn: 'assemble') {
             "src/testAcceptance/resources/application-accept.properties"
     ]
     def config = propFiles.join(",")
-    def jarFile = "${projectDir}/build/libs/${jar.baseName}-${jar.version}.jar"
+    def jarFile = "${projectDir}/build/libs/${jar.baseName}.jar"
     command "java -jar ${jarFile} --spring.config.location=${config}"
     ready "Started Application"
 }

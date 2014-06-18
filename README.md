@@ -17,7 +17,7 @@ For Windows use gradlew.bat
     ./gradlew bootRun
 
 ### Run the fat jar
-    java -jar build/libs/micro-loan-0.0.1.jar
+    java -jar build/libs/micro-loan.jar
 
 ## Verification
     $ curl localhost:8888/info
