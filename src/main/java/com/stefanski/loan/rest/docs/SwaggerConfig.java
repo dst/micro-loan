@@ -5,6 +5,7 @@ import com.mangofactory.swagger.plugin.EnableSwagger;
 import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
 import com.wordnik.swagger.model.ApiInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,10 +19,14 @@ public class SwaggerConfig {
     @Autowired
     private SpringSwaggerConfig springSwaggerConfig;
 
+    @Value("${info.app.version}")
+    private String version;
+
     @Bean
     public SwaggerSpringMvcPlugin customImplementation() {
         return new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
                 .apiInfo(apiInfo())
+                .apiVersion(version)
                 .includePatterns("/loans.*", "/customers.*", "/info");
     }
 
