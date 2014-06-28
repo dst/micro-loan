@@ -1,6 +1,7 @@
 package com.stefanski.loan.core.risk;
 
 import com.stefanski.loan.core.domain.Loan;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +16,12 @@ import static java.time.LocalTime.MIDNIGHT;
 @Component
 class DrunkManAtNightRisk implements Risk {
 
-    @Value("${system.loan.maxAmount}")
     private BigDecimal maxAmount;
+
+    @Autowired
+    public DrunkManAtNightRisk(@Value("${system.loan.maxAmount}") BigDecimal maxAmount) {
+        this.maxAmount = maxAmount;
+    }
 
     @Override
     public boolean isApplicableTo(Loan loan) {
@@ -31,10 +36,6 @@ class DrunkManAtNightRisk implements Risk {
     @Override
     public String getName() {
         return "Drunk Man At Night Risk";
-    }
-
-    public void setMaxAmount(BigDecimal maxAmount) {
-        this.maxAmount = maxAmount;
     }
 
     private boolean isAboveOrEqualLimit(Loan loan) {

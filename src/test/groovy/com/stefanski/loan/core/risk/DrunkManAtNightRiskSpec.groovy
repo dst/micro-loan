@@ -19,8 +19,7 @@ class DrunkManAtNightRiskSpec extends Specification {
     private DrunkManAtNightRisk risk;
 
     def setup() {
-        risk = new DrunkManAtNightRisk();
-        risk.setMaxAmount(MAX_AMOUNT);
+        risk = new DrunkManAtNightRisk(MAX_AMOUNT);
     }
 
     def "Should detect risk of drunk man at night when needed"() {
