@@ -1,18 +1,13 @@
 package com.stefanski.loan.rest.controller;
 
-import com.stefanski.loan.core.domain.Extension;
 import com.stefanski.loan.core.domain.Loan;
 import com.stefanski.loan.core.ex.RiskTooHighException;
 import com.stefanski.loan.core.service.LoanService;
 import com.stefanski.loan.rest.model.request.LoanReq;
 import com.stefanski.loan.rest.model.response.CreationResp;
 import com.stefanski.loan.rest.model.response.ErrorResp;
-import com.stefanski.loan.rest.model.response.ExtensionResp;
 import com.stefanski.loan.rest.model.response.LoanResp;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
+import com.wordnik.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -37,6 +32,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Slf4j
 @RequestMapping("/loans")
 @RestController
+@Api(value = "Loans", description = "Loans management")
 public class LoanController extends AbstractRestController {
 
     @Autowired
@@ -59,24 +55,6 @@ public class LoanController extends AbstractRestController {
         Long loanId = loanService.applyForLoan(loanReq);
         HttpHeaders headers = getHttpHeadersWithLocation("/{loanId}", loanId);
         CreationResp creation = new CreationResp(loanId);
-        return new ResponseEntity<>(creation, headers, CREATED);
-    }
-
-    @RequestMapping(value = "/{loanId}/extensions", method = POST)
-    @ApiOperation(value = "Extends a loan with given ID", notes = "Returns ID of extension",
-            response = CreationResp.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = HTTP_CREATED, message = "Success"),
-            @ApiResponse(code = HTTP_BAD_REQUEST, message = "Invalid input", response = ErrorResp.class),
-            @ApiResponse(code = HTTP_NOT_FOUND, message = "Resource not found", response = ErrorResp.class)
-    })
-    public ResponseEntity<CreationResp> createExtension(
-            @ApiParam(value = "ID of loan that needs to be extended")
-            @PathVariable Long loanId) {
-
-        Long extensionId = loanService.extendLoan(loanId);
-        HttpHeaders headers = getHttpHeadersWithLocation("/{extensionId}", extensionId);
-        CreationResp creation = new CreationResp(extensionId);
         return new ResponseEntity<>(creation, headers, CREATED);
     }
 
@@ -111,25 +89,6 @@ public class LoanController extends AbstractRestController {
 
         List<Loan> loans = loanService.findCustomerLoans(customerId);
         List<LoanResp> resp = loans.stream().map(LoanResp::fromLoan).collect(toList());
-        return new ResponseEntity<>(resp, OK);
-    }
-
-    @RequestMapping(value = "/{loanId}/extensions/{extensionId}", method = GET)
-    @ApiOperation(value = "Finds loan extension by ID which is part of the given loan", notes = "Returns an extensions based on ID",
-            response = ExtensionResp.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = HTTP_OK, message = "Success"),
-            @ApiResponse(code = HTTP_BAD_REQUEST, message = "Invalid input", response = ErrorResp.class),
-            @ApiResponse(code = HTTP_NOT_FOUND, message = "Resource not found", response = ErrorResp.class)
-    })
-    public ResponseEntity<ExtensionResp> findExtension(
-            @ApiParam(value = "ID of loan which contains searched extension")
-            @PathVariable Long loanId,
-            @ApiParam(value = "ID of extension that needs to be fetched")
-            @PathVariable Long extensionId) {
-
-        Extension ext = loanService.findLoanExtension(loanId, extensionId);
-        ExtensionResp resp = ExtensionResp.fromExtension(ext);
         return new ResponseEntity<>(resp, OK);
     }
 }

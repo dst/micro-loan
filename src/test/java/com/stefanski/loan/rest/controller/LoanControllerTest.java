@@ -125,26 +125,6 @@ public class LoanControllerTest extends ControllerIntegrationTest {
     }
 
     @Test
-    public void shouldReturnIdOfCreatedExtension() throws Exception {
-        when(loanService.extendLoan(LOAN_ID)).thenReturn(EXTENSION_ID);
-
-        mockMvc.perform(postWithJson(LOANS_PREFIX + "/" + LOAN_ID + "/extensions", null))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.id", is(EXTENSION_ID.intValue())));
-    }
-
-    @Test
-    public void shouldCreateLocationToNewExtension() throws Exception {
-        when(loanService.extendLoan(LOAN_ID)).thenReturn(EXTENSION_ID);
-
-        String extensionsPath = LOANS_PREFIX + "/" + LOAN_ID + "/extensions";
-        mockMvc.perform(postWithJson(extensionsPath, null))
-                .andExpect(header().string("Location",
-                        Matchers.endsWith(extensionsPath + "/" + EXTENSION_ID)));
-    }
-
-    @Test
     public void shouldFindLoanUseHttpOk() throws Exception {
         when(loanService.findLoanById(LOAN_ID)).thenReturn(simpleLoan());
 
@@ -194,21 +174,6 @@ public class LoanControllerTest extends ControllerIntegrationTest {
                 .andExpect(jsonPath("$.extensions", hasSize(1)))
                 .andExpect(jsonPath("$.extensions[0].id", is(EXTENSION_ID.intValue())))
                 .andExpect(jsonPath("$.extensions[0].creationTime", is(extension.getCreationTime().format(ISO_DATE))));
-    }
-
-    @Test
-    public void shouldReturnCorrectExtension() throws Exception {
-        Extension extension = new Extension();
-        extension.setId(EXTENSION_ID);
-        extension.setCreationTime(LocalDateTime.now());
-
-        when(loanService.findLoanExtension(LOAN_ID, EXTENSION_ID)).thenReturn(extension);
-
-        mockMvc.perform(get(LOANS_PREFIX + "/" + LOAN_ID + "/extensions/" + EXTENSION_ID))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.id", is(EXTENSION_ID.intValue())))
-                .andExpect(jsonPath("$.creationTime", is(extension.getCreationTime().format(ISO_DATE))));
     }
 
     @Test

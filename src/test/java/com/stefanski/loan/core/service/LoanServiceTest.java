@@ -49,8 +49,6 @@ public class LoanServiceTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        loanService.setExtensionDays(7);
-        loanService.setExtensionInterest(new BigDecimal("1.5"));
         loanService.setLoanInterest(new BigDecimal("7.2"));
     }
 
@@ -99,48 +97,6 @@ public class LoanServiceTest {
     }
 
     @Test
-    public void shouldFindExtensionIfExists() throws Exception {
-        // given:
-        Extension ext = new Extension();
-        ext.setId(EXTENSION_ID);
-        Loan loan = simpleLoan();
-        loan.setId(LOAN_ID);
-        ext.setLoan(loan);
-        when(extensionRepository.findOne(EXTENSION_ID)).thenReturn(ext);
-
-        // when:
-        Extension foundExt = loanService.findLoanExtension(LOAN_ID, EXTENSION_ID);
-
-        // then:
-        assertThat(foundExt).isNotNull();
-        assertThat(foundExt.getId()).isEqualTo(EXTENSION_ID);
-    }
-
-
-    @Test(expected = ResourceNotFoundException.class)
-    public void shouldThrowExceptionIfExtensionBelongsToDifferentLoan() throws Exception {
-        // given:
-        Extension ext = new Extension();
-        ext.setId(EXTENSION_ID);
-        Loan loan = simpleLoan();
-        loan.setId(LOAN_ID + 1);
-        ext.setLoan(loan);
-        when(extensionRepository.findOne(EXTENSION_ID)).thenReturn(ext);
-
-        // when:
-        loanService.findLoanExtension(LOAN_ID, EXTENSION_ID);
-    }
-
-    @Test(expected = ResourceNotFoundException.class)
-    public void shouldThrowExceptionWhenSearchingNotExistingExtension() throws Exception {
-        // given:
-        when(extensionRepository.findOne(EXTENSION_ID)).thenReturn(null);
-
-        // when:
-        loanService.findLoanExtension(LOAN_ID, EXTENSION_ID);
-    }
-
-    @Test
     public void shouldCreateLoanForValidRequest() throws Exception {
         // given:
         LoanReq loanReq = simpleLoanReqest();
@@ -153,69 +109,5 @@ public class LoanServiceTest {
 
         // then:
         assertThat(loanId).isEqualTo(LOAN_ID);
-    }
-
-    @Test
-    public void shouldReturnIdOfCreatedExtension() throws Exception {
-        // given:
-        Loan loan = simpleLoan();
-        loan.setId(LOAN_ID);
-        when(loanRepository.findOne(LOAN_ID)).thenReturn(loan);
-
-        Extension extension = simpleExtension();
-        extension.setId(EXTENSION_ID);
-        when(extensionRepository.save(any(Extension.class))).thenReturn(extension);
-
-        // when:
-        Long extensionId = loanService.extendLoan(LOAN_ID);
-
-        // then:
-        assertThat(extensionId).isEqualTo(EXTENSION_ID);
-    }
-
-    @Test
-    public void shouldIncreaseLoanInterestWhenExtendingLoan() throws Exception {
-        // given:
-        BigDecimal interest = new BigDecimal("12.13");
-        Loan loan = simpleLoan();
-        loan.setInterest(interest);
-        loan.setId(LOAN_ID);
-        when(loanRepository.findOne(LOAN_ID)).thenReturn(loan);
-
-        Extension extension = simpleExtension();
-        extension.setId(EXTENSION_ID);
-        when(extensionRepository.save(any(Extension.class))).thenReturn(extension);
-
-        // when:
-        loanService.extendLoan(LOAN_ID);
-
-        // then:
-        ArgumentCaptor<Loan> loanCapture = ArgumentCaptor.forClass(Loan.class);
-        verify(loanRepository).save(loanCapture.capture());
-        BigDecimal newInterest = loanCapture.getValue().getInterest();
-        assertThat(newInterest).isGreaterThan(interest);
-    }
-
-    @Test
-    public void shouldIncreaseLoanTermAfterExtending() throws Exception {
-        // given:
-        LocalDateTime end = LocalDateTime.now();
-        Loan loan = simpleLoan();
-        loan.setEnd(end);
-        loan.setId(LOAN_ID);
-        when(loanRepository.findOne(LOAN_ID)).thenReturn(loan);
-
-        Extension extension = simpleExtension();
-        extension.setId(EXTENSION_ID);
-        when(extensionRepository.save(any(Extension.class))).thenReturn(extension);
-
-        // when:
-        loanService.extendLoan(LOAN_ID);
-
-        // then:
-        ArgumentCaptor<Loan> loanCapture = ArgumentCaptor.forClass(Loan.class);
-        verify(loanRepository).save(loanCapture.capture());
-        LocalDateTime newDeadline = loanCapture.getValue().getEnd();
-        assertThat(newDeadline.isAfter(end)).isTrue();
     }
 }
