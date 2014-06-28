@@ -2,7 +2,6 @@ package com.stefanski.loan.rest.controller;
 
 import com.stefanski.loan.core.domain.Extension;
 import com.stefanski.loan.core.domain.Loan;
-import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.ex.RiskTooHighException;
 import com.stefanski.loan.core.service.LoanService;
 import com.stefanski.loan.rest.model.request.LoanReq;
@@ -54,8 +53,7 @@ public class LoanController extends AbstractRestController {
     public ResponseEntity<CreationResp> createLoan(
             @ApiParam(value = "Loan object that needs to be created")
             @Valid @RequestBody LoanReq loanReq,
-            HttpServletRequest req)
-            throws ResourceNotFoundException, RiskTooHighException {
+            HttpServletRequest req) throws RiskTooHighException {
 
         loanReq.setIp(req.getRemoteAddr());
         Long loanId = loanService.applyForLoan(loanReq);
@@ -74,8 +72,7 @@ public class LoanController extends AbstractRestController {
     })
     public ResponseEntity<CreationResp> createExtension(
             @ApiParam(value = "ID of loan that needs to be extended")
-            @PathVariable Long loanId)
-            throws ResourceNotFoundException {
+            @PathVariable Long loanId) {
 
         Long extensionId = loanService.extendLoan(loanId);
         HttpHeaders headers = getHttpHeadersWithLocation("/{extensionId}", extensionId);
@@ -93,8 +90,7 @@ public class LoanController extends AbstractRestController {
     })
     public ResponseEntity<LoanResp> findLoan(
             @ApiParam(value = "ID of loan that needs to be fetched")
-            @PathVariable Long loanId)
-            throws ResourceNotFoundException {
+            @PathVariable Long loanId) {
 
         Loan loan = loanService.findLoanById(loanId);
         LoanResp resp = LoanResp.fromLoan(loan);
@@ -111,8 +107,7 @@ public class LoanController extends AbstractRestController {
     })
     public ResponseEntity<List<LoanResp>> findCustomerLoans(
             @ApiParam(value = "ID of customer that all his loans needs to be fetched")
-            @RequestParam Long customerId)
-            throws ResourceNotFoundException {
+            @RequestParam Long customerId) {
 
         List<Loan> loans = loanService.findCustomerLoans(customerId);
         List<LoanResp> resp = loans.stream().map(LoanResp::fromLoan).collect(toList());
@@ -131,8 +126,7 @@ public class LoanController extends AbstractRestController {
             @ApiParam(value = "ID of loan which contains searched extension")
             @PathVariable Long loanId,
             @ApiParam(value = "ID of extension that needs to be fetched")
-            @PathVariable Long extensionId)
-            throws ResourceNotFoundException {
+            @PathVariable Long extensionId) {
 
         Extension ext = loanService.findLoanExtension(loanId, extensionId);
         ExtensionResp resp = ExtensionResp.fromExtension(ext);

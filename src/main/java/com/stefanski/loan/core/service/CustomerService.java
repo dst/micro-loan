@@ -20,7 +20,7 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public Customer findById(Long customerId) throws ResourceNotFoundException {
+    public Customer findById(Long customerId) {
         Customer customer = customerRepository.findOne(customerId);
         if (customer == null) {
             String msg = String.format("Customer with id %d does not exist", customerId);

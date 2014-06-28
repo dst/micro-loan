@@ -49,7 +49,7 @@ public class LoanService {
     private RiskAnalyser riskAnalyser;
 
 
-    public Loan findLoanById(Long loanId) throws ResourceNotFoundException {
+    public Loan findLoanById(Long loanId) {
         Loan loan = loanRepository.findOne(loanId);
         if (loan == null) {
             String msg = String.format("Loan with id %d does not exist", loanId);
@@ -61,7 +61,7 @@ public class LoanService {
     }
 
 
-    public Extension findLoanExtension(Long loanId, Long extensionId) throws ResourceNotFoundException {
+    public Extension findLoanExtension(Long loanId, Long extensionId) {
         Extension ext = extensionRepository.findOne(extensionId);
         if (ext == null) {
             String msg = String.format("Extension with id %d does not exist", extensionId);
@@ -78,9 +78,7 @@ public class LoanService {
         return ext;
     }
 
-    public Long applyForLoan(LoanReq loanReq)
-            throws ResourceNotFoundException, RiskTooHighException {
-
+    public Long applyForLoan(LoanReq loanReq) throws RiskTooHighException {
         Loan loan = createLoanFromRequest(loanReq);
 
         riskAnalyser.validate(loan);
@@ -91,7 +89,7 @@ public class LoanService {
         return createdLoan.getId();
     }
 
-    public List<Loan> findCustomerLoans(Long customerId) throws ResourceNotFoundException {
+    public List<Loan> findCustomerLoans(Long customerId) {
         if (customerId == null) {
             throw new ResourceNotFoundException("Customer with empty id does not exist");
         }
@@ -100,7 +98,7 @@ public class LoanService {
         return customer.getLoans();
     }
 
-    public Long extendLoan(Long loanId) throws ResourceNotFoundException {
+    public Long extendLoan(Long loanId) {
         Loan loan = findLoanById(loanId);
 
         Extension extension = new Extension();
@@ -117,7 +115,7 @@ public class LoanService {
         return extension.getId();
     }
 
-    private Loan createLoanFromRequest(LoanReq loanReq) throws ResourceNotFoundException {
+    private Loan createLoanFromRequest(LoanReq loanReq) {
         LocalDateTime begin = LocalDateTime.now();
         LocalDateTime end = begin.plusDays(loanReq.getDaysCount());
 

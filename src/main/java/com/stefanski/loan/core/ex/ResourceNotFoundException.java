@@ -1,11 +1,11 @@
 package com.stefanski.loan.core.ex;
 
 /**
- * Throw when resource (customer, loan) was not found.
+ * Thrown when resource (customer, loan) was not found.
  *
  * @author Dariusz Stefanski
  */
-public class ResourceNotFoundException extends Exception {
+public class ResourceNotFoundException extends RuntimeException {
 
     public ResourceNotFoundException() {
         super();

@@ -1,7 +1,6 @@
 package com.stefanski.loan.rest.controller;
 
 import com.stefanski.loan.core.domain.Customer;
-import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.service.CustomerService;
 import com.stefanski.loan.rest.model.request.CustomerReq;
 import com.stefanski.loan.rest.model.response.CreationResp;
@@ -64,8 +63,7 @@ public class CustomerController extends AbstractRestController {
     })
     public ResponseEntity<CustomerResp> findCustomer(
             @ApiParam(value = "ID of customer that needs to be fetched")
-            @PathVariable Long customerId)
-            throws ResourceNotFoundException {
+            @PathVariable Long customerId) {
 
         Customer customer = customerService.findById(customerId);
         CustomerResp resp = CustomerResp.fromCustomer(customer);
