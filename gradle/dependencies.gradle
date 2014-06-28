@@ -1,7 +1,6 @@
 repositories {
     mavenCentral()
     maven { url "http://repo.spring.io/libs-snapshot" }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 }
 
 dependencies {
@@ -29,7 +28,7 @@ dependencies {
     compile "org.projectlombok:lombok:1.14.0"
 
     // Swagger documentation
-    compile "com.mangofactory:swagger-springmvc:0.8.4-SNAPSHOT"
+    compile "com.mangofactory:swagger-springmvc:0.8.4"
 
 
     runtime "com.h2database:h2:1.3.175"
