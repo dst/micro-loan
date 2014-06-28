@@ -11,7 +11,7 @@ import static com.stefanski.loan.util.TestDataFixture.simpleLoan
  */
 class RiskAnalyserSpec extends Specification {
 
-    def "Should throw exception when some rule applies"() {
+    def "Should throw exception when the rule applies"() {
         given:
         def analyzer = new RiskAnalyser()
         analyzer.setRules([new SureRisk()])
@@ -40,7 +40,6 @@ class RiskAnalyserSpec extends Specification {
         boolean isApplicableTo(Loan loan) {
             return false
         }
-
     }
 
     private class SureRisk implements Risk {
