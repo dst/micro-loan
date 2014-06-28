@@ -44,24 +44,6 @@ class DrunkManAtNightRiskSpec extends Specification {
         hour(6) | limit()      | true
     }
 
-    def "Should have message"() {
-        given:
-        def msg = risk.getMessage()
-
-        expect:
-        msg != null
-        msg != ""
-    }
-
-    def "Should have name"() {
-        given:
-        def name = risk.getName()
-
-        expect:
-        name != null
-        name != ""
-    }
-
     private BigDecimal limit() {
         MAX_AMOUNT
     }

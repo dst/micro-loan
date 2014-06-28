@@ -44,23 +44,4 @@ class OfficiousManRiskSpec extends Specification {
         2L        | true
         3L        | true
     }
-
-
-    def "Should have message"() {
-        given:
-        def msg = risk.getMessage()
-
-        expect:
-        msg != null
-        msg != ""
-    }
-
-    def "Should have name"() {
-        given:
-        def name = risk.getName()
-
-        expect:
-        name != null
-        name != ""
-    }
 }
