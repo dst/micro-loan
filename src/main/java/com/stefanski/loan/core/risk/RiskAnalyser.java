@@ -21,7 +21,7 @@ public class RiskAnalyser {
     /**
      * Validates a given loan according to specified rules.
      *
-     * @param loan validated load
+     * @param loan validated loan
      * @throws RiskTooHighException if at least one risk was detected
      */
     public void validate(Loan loan) throws RiskTooHighException {
