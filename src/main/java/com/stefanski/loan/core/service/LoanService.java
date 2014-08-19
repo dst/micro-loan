@@ -25,18 +25,21 @@ import java.util.List;
 @Service
 public class LoanService {
 
-    @Value("${system.loan.interest}")
     private BigDecimal loanInterest;
-
-    @Autowired
     private CustomerService customerService;
-
-    @Autowired
     private LoanRepository loanRepository;
-
-    @Autowired
     private RiskAnalyser riskAnalyser;
 
+    @Autowired
+    public LoanService(@Value("${system.loan.interest}") BigDecimal loanInterest,
+                       CustomerService customerService,
+                       LoanRepository loanRepository,
+                       RiskAnalyser riskAnalyser) {
+        this.loanInterest = loanInterest;
+        this.customerService = customerService;
+        this.loanRepository = loanRepository;
+        this.riskAnalyser = riskAnalyser;
+    }
 
     public Loan findLoanById(Long loanId) {
         Loan loan = loanRepository.findOne(loanId);
@@ -92,9 +95,5 @@ public class LoanService {
 
     private BigDecimal getLoanInterest() {
         return loanInterest;
-    }
-
-    public void setLoanInterest(BigDecimal loanInterest) {
-        this.loanInterest = loanInterest;
     }
 }

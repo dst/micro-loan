@@ -1,7 +1,6 @@
 package com.stefanski.loan.core.service;
 
 import com.stefanski.loan.core.domain.Customer;
-import com.stefanski.loan.core.domain.Extension;
 import com.stefanski.loan.core.domain.Loan;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
 import com.stefanski.loan.core.repository.ExtensionRepository;
@@ -10,26 +9,27 @@ import com.stefanski.loan.core.risk.RiskAnalyser;
 import com.stefanski.loan.rest.model.request.LoanReq;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.stefanski.loan.util.TestDataFixture.*;
+import static com.stefanski.loan.util.TestDataFixture.CUSTOMER_ID;
+import static com.stefanski.loan.util.TestDataFixture.LOAN_ID;
+import static com.stefanski.loan.util.TestDataFixture.simpleCustomer;
+import static com.stefanski.loan.util.TestDataFixture.simpleLoanReqest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  * @author Dariusz Stefanski
  */
 public class LoanServiceTest {
+
+    private static final BigDecimal LOAN_INTEREST = new BigDecimal("7.2");
 
     @Mock
     private CustomerService customerService;
@@ -43,13 +43,12 @@ public class LoanServiceTest {
     @Mock
     private ExtensionRepository extensionRepository;
 
-    @InjectMocks
     private LoanService loanService;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        loanService.setLoanInterest(new BigDecimal("7.2"));
+        loanService = new LoanService(LOAN_INTEREST, customerService, loanRepository, riskAnalyser);
     }
 
     @Test
