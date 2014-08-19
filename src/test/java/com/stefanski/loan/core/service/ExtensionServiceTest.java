@@ -7,14 +7,16 @@ import com.stefanski.loan.core.repository.ExtensionRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import static com.stefanski.loan.util.TestDataFixture.*;
+import static com.stefanski.loan.util.TestDataFixture.EXTENSION_ID;
+import static com.stefanski.loan.util.TestDataFixture.LOAN_ID;
+import static com.stefanski.loan.util.TestDataFixture.simpleExtension;
+import static com.stefanski.loan.util.TestDataFixture.simpleLoan;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -25,20 +27,22 @@ import static org.mockito.Mockito.when;
  */
 public class ExtensionServiceTest {
 
+    private static final int EXTENSION_DAYS = 7;
+    private static final BigDecimal EXTENSION_INTEREST = new BigDecimal("1.5");
+
     @Mock
     private ExtensionRepository extensionRepository;
 
     @Mock
     private LoanService loanService;
 
-    @InjectMocks
     private ExtensionService extensionService;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        extensionService.setExtensionDays(7);
-        extensionService.setExtensionInterest(new BigDecimal("1.5"));
+        extensionService = new ExtensionService(EXTENSION_DAYS, EXTENSION_INTEREST,
+                extensionRepository, loanService);
     }
 
     @Test

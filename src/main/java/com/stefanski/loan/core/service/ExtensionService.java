@@ -21,17 +21,22 @@ import java.time.LocalDateTime;
 @Service
 public class ExtensionService {
 
-    @Value("${system.loan.ext.days}")
     private int extensionDays;
-
-    @Value("${system.loan.ext.interest}")
     private BigDecimal extensionInterest;
 
-    @Autowired
     private ExtensionRepository extensionRepository;
+    private LoanService loanService;
 
     @Autowired
-    private LoanService loanService;
+    public ExtensionService(@Value("${system.loan.ext.days}") int extensionDays,
+                            @Value("${system.loan.ext.interest}") BigDecimal extensionInterest,
+                            ExtensionRepository extensionRepository,
+                            LoanService loanService) {
+        this.extensionDays = extensionDays;
+        this.extensionInterest = extensionInterest;
+        this.extensionRepository = extensionRepository;
+        this.loanService = loanService;
+    }
 
     public Extension findLoanExtension(Long loanId, Long extensionId) {
         Extension ext = extensionRepository.findOne(extensionId);
@@ -73,13 +78,5 @@ public class ExtensionService {
 
     private BigDecimal getExtensionInterest() {
         return extensionInterest;
-    }
-
-    public void setExtensionDays(int extensionDays) {
-        this.extensionDays = extensionDays;
-    }
-
-    public void setExtensionInterest(BigDecimal extensionInterest) {
-        this.extensionInterest = extensionInterest;
     }
 }
