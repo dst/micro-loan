@@ -17,8 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CustomerService {
 
-    @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    public CustomerService(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
 
     public Customer findById(Long customerId) {
         Customer customer = customerRepository.findOne(customerId);
