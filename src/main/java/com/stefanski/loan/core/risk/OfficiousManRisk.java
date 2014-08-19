@@ -17,11 +17,16 @@ import java.time.LocalDate;
 class OfficiousManRisk implements Risk {
 // officious- nadgorliwy, natretny, narzucajacy sie
 
-    @Value("${system.loan.limitPerIp}")
     private long loanLimitPerIp;
 
-    @Autowired
     private LoanRepository loanRepository;
+
+    @Autowired
+    public OfficiousManRisk(@Value("${system.loan.limitPerIp}") long loanLimitPerIp,
+                            LoanRepository loanRepository) {
+        this.loanLimitPerIp = loanLimitPerIp;
+        this.loanRepository = loanRepository;
+    }
 
     @Override
     public boolean isApplicableTo(Loan loan) {
