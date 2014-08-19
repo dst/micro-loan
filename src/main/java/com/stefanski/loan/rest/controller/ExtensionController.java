@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static java.net.HttpURLConnection.*;
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
+import static java.net.HttpURLConnection.HTTP_CREATED;
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
+import static java.net.HttpURLConnection.HTTP_OK;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -29,8 +32,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Api(value = "Extensions", description = "Extensions management")
 public class ExtensionController extends AbstractRestController {
 
-    @Autowired
     private ExtensionService extensionService;
+
+    @Autowired
+    public ExtensionController(ExtensionService extensionService) {
+        this.extensionService = extensionService;
+    }
 
     @RequestMapping(value = "/{loanId}/extensions", method = POST)
     @ApiOperation(value = "Extends a loan with given ID", notes = "Returns ID of extension",
