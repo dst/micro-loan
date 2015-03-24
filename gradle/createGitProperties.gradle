@@ -1,11 +1,11 @@
 task createGitProperties << {
     def name2cmd = [
-            "git.branch"     : "git rev-parse --abbrev-ref HEAD",
-            "git.commit.id"  : "git rev-parse --short HEAD",
-            "git.commit.time": "git log -1 --format='%cd'"
+            'git.branch'     : 'git rev-parse --abbrev-ref HEAD',
+            'git.commit.id'  : 'git rev-parse --short HEAD',
+            'git.commit.time': 'git log -1 --format="%cd"'
     ]
 
-    def file = new File("src/main/resources/git.properties")
+    def file = new File('src/main/resources/git.properties')
     file.delete()
 
     name2cmd.each() { name, cmd ->
@@ -13,17 +13,16 @@ task createGitProperties << {
         proc.waitFor()
         def value
         if (proc.exitValue() != 0) {
-            printf "Error when executing %s: %s", cmd, proc.err.text
-            value = "Not available"
+            printf 'Error when executing %s: %s', cmd, proc.err.text
+            value = 'Not available'
         } else {
             value = proc.in.text
         }
-        def line = String.format("%s = %s", name, value)
-        file.append(line)
+        file.append("$name = $value")
     }
 
-    print "Generated file is:\n"
-    file.readLines().each { line -> println(line) }
+    print 'Generated file is:\n'
+    print file.text
 }
 
 jar.dependsOn createGitProperties
