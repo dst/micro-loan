@@ -82,7 +82,7 @@ public class LoanService {
 
         Loan loan = new Loan();
         loan.setAmount(loanReq.getAmount());
-        loan.setInterest(getLoanInterest());
+        loan.setInterest(loanInterest);
         loan.setStart(begin);
         loan.setEnd(end);
         loan.setIp(loanReq.getIp());
@@ -91,9 +91,5 @@ public class LoanService {
         loan.setCustomer(customer);
 
         return loan;
-    }
-
-    private BigDecimal getLoanInterest() {
-        return loanInterest;
     }
 }

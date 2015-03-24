@@ -79,17 +79,9 @@ public class ExtensionService {
     }
 
     private void extendLoan(Loan loan) {
-        loan.extendDeadline(getExtensionDays());
-        loan.multipleInterest(getExtensionInterest());
+        loan.extendDeadline(extensionDays);
+        loan.multipleInterest(extensionInterest);
         loanService.save(loan);
         log.info("Updated loan: {}", loan);
-    }
-
-    private int getExtensionDays() {
-        return extensionDays;
-    }
-
-    private BigDecimal getExtensionInterest() {
-        return extensionInterest;
     }
 }

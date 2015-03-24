@@ -14,8 +14,8 @@ import java.time.LocalDate;
  */
 @Slf4j
 @Component
-class OfficiousManRisk implements Risk {
 // officious- nadgorliwy, natretny, narzucajacy sie
+class OfficiousManRisk implements Risk {
 
     private long loanLimitPerIp;
 
@@ -44,9 +44,5 @@ class OfficiousManRisk implements Risk {
     @Override
     public String getName() {
         return "Officious Man Risk";
-    }
-
-    public void setLoanLimitPerIp(int loanLimitPerIp) {
-        this.loanLimitPerIp = loanLimitPerIp;
     }
 }
