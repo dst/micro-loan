@@ -10,16 +10,13 @@ import static java.time.Month.*
  * @author Dariusz Stefanski
  */
 class FormatterTest extends Specification {
-    def "Should correctly format time"() {
-        given:
-
+    def "should correctly format time"() {
         expect:
-        Formatter.formatTime(time.atStartOfDay()) == formatted
-
+            Formatter.formatTime(time.atStartOfDay()) == formatted
         where:
-        time                             | formatted
-        LocalDate.of(2014, JUNE, 16)     | "2014-06-16"
-        LocalDate.of(2014, DECEMBER, 16) | "2014-12-16"
-        LocalDate.of(2000, JANUARY, 1)   | "2000-01-01"
+            time                             | formatted
+            LocalDate.of(2014, JUNE, 16)     | "2014-06-16"
+            LocalDate.of(2014, DECEMBER, 16) | "2014-12-16"
+            LocalDate.of(2000, JANUARY, 1)   | "2000-01-01"
     }
 }

@@ -14,33 +14,24 @@ import static java.math.BigDecimal.TEN
 @Slf4j
 class DrunkManAtNightRiskSpec extends Specification {
 
-    private static final BigDecimal MAX_AMOUNT = TEN;
+    private static final BigDecimal MAX_AMOUNT = TEN
 
-    private DrunkManAtNightRisk risk;
-
-    def setup() {
-        risk = new DrunkManAtNightRisk(MAX_AMOUNT);
-    }
-
-    def "Should detect risk of drunk man at night when needed"() {
-        log.debug("Checking for time=$time and amount=$amount")
-
+    def "should detect risk of drunk man at night"() {
         given:
-        Loan loan = simpleLoan(amount, time);
-
+            def risk = new DrunkManAtNightRisk(MAX_AMOUNT)
+            Loan loan = simpleLoan(amount, time)
         expect:
-        risk.isApplicableTo(loan) == risky
-
+            risk.isApplicableTo(loan) == risky
         where:
-        time    | amount       | risky
-        day()   | belowLimit() | false
-        day()   | limit()      | false
-        day()   | aboveLimit() | false
-        night() | belowLimit() | false
-        night() | limit()      | true
-        night() | aboveLimit() | true
-        hour(0) | limit()      | true
-        hour(6) | limit()      | true
+            time    | amount       | risky
+            day()   | belowLimit() | false
+            day()   | limit()      | false
+            day()   | aboveLimit() | false
+            night() | belowLimit() | false
+            night() | limit()      | true
+            night() | aboveLimit() | true
+            hour(0) | limit()      | true
+            hour(6) | limit()      | true
     }
 
     private BigDecimal limit() {
@@ -48,10 +39,10 @@ class DrunkManAtNightRiskSpec extends Specification {
     }
 
     private BigDecimal belowLimit() {
-        MAX_AMOUNT.subtract(ONE);
+        MAX_AMOUNT.subtract(ONE)
     }
 
     private BigDecimal aboveLimit() {
-        MAX_AMOUNT.add(ONE);
+        MAX_AMOUNT.add(ONE)
     }
 }

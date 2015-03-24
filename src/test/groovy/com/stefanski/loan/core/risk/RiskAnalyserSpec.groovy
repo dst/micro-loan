@@ -11,28 +11,28 @@ import static com.stefanski.loan.util.TestDataFixture.simpleLoan
  */
 class RiskAnalyserSpec extends Specification {
 
-    def "Should throw exception when the rule applies"() {
+    def "should throw exception when the rule applies"() {
         given:
-        def analyzer = new RiskAnalyser()
-        analyzer.setRules([new SureRisk()])
+            def analyzer = new RiskAnalyser()
+            analyzer.setRules([new SureRisk()])
 
         when:
-        analyzer.validate(simpleLoan())
+            analyzer.validate(simpleLoan())
 
         then:
-        thrown(RiskTooHighException)
+            thrown(RiskTooHighException)
     }
 
-    def "Should risk validation pass when none of rules applies"() {
+    def "should risk validation pass when none of rules applies"() {
         given:
-        def analyzer = new RiskAnalyser()
-        analyzer.setRules([new NoRisk(), new NoRisk()])
+            def analyzer = new RiskAnalyser()
+            analyzer.setRules([new NoRisk(), new NoRisk()])
 
         when:
-        analyzer.validate(simpleLoan())
+            analyzer.validate(simpleLoan())
 
         then:
-        notThrown(RiskTooHighException)
+            notThrown(RiskTooHighException)
     }
 
     private class NoRisk implements Risk {
@@ -45,7 +45,7 @@ class RiskAnalyserSpec extends Specification {
     private class SureRisk implements Risk {
         @Override
         boolean isApplicableTo(Loan loan) {
-            return true;
+            return true
         }
     }
 }

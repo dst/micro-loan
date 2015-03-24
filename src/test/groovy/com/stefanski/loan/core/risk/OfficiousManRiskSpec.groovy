@@ -14,30 +14,19 @@ import static com.stefanski.loan.util.TestDataFixture.simpleLoan
  */
 class OfficiousManRiskSpec extends Specification {
 
-    @Mock
-    private LoanRepository loanRepository;
-
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
-
-    def "Should detect risk when there is too many loans issued from a single IP in one day"() {
+    def "should detect risk when there is too many loans issued from a single IP in one day"() {
         given:
-        def loanLimitPerIp = 2
-        def loan = simpleLoan()
-        def day = loan.getStart().toLocalDate()
-        Mockito.when(loanRepository.getLoanCountFor(loan.getIp(), day)).thenReturn(loanCount)
-        def risk = new OfficiousManRisk(loanLimitPerIp, loanRepository)
-
+            def loanLimitPerIp = 2
+            LoanRepository loanRepository = Mock(LoanRepository)
+            loanRepository.getLoanCountFor(_, _) >> loanCount
+            def risk = new OfficiousManRisk(loanLimitPerIp, loanRepository)
         expect:
-        risk.isApplicableTo(loan) == risky
-
+            risk.isApplicableTo(simpleLoan()) == risky
         where:
-        loanCount | risky
-        0L        | false
-        1L        | false
-        2L        | true
-        3L        | true
+            loanCount | risky
+            0L        | false
+            1L        | false
+            2L        | true
+            3L        | true
     }
 }
