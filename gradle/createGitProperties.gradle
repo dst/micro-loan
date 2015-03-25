@@ -13,7 +13,7 @@ task createGitProperties << {
         proc.waitFor()
         def value
         if (proc.exitValue() != 0) {
-            printf 'Error when executing %s: %s', cmd, proc.err.text
+            logger.error('Error when executing command {}: {}', cmd, proc.err.text)
             value = 'Not available'
         } else {
             value = proc.in.text
@@ -21,8 +21,8 @@ task createGitProperties << {
         file.append("$name = $value")
     }
 
-    print 'Generated file is:\n'
-    print file.text
+    logger.info('Generated file is:')
+    logger.info(file.text)
 }
 
 jar.dependsOn createGitProperties
