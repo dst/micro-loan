@@ -5,7 +5,7 @@ task createGitProperties << {
             'git.commit.time': 'git log -1 --format="%cd"'
     ]
 
-    def file = new File('src/main/resources/git.properties')
+    def file = file("${sourceSets.main.output.resourcesDir}/git.properties")
     file.delete()
 
     name2cmd.each() { name, cmd ->
