@@ -15,8 +15,12 @@ import java.util.List;
 @Component
 public class RiskAnalyser {
 
-    @Autowired
     private List<Risk> rules;
+
+    @Autowired
+    public RiskAnalyser(List<Risk> rules) {
+        this.rules = rules;
+    }
 
     /**
      * Validates a given loan according to specified rules.
@@ -31,9 +35,5 @@ public class RiskAnalyser {
                 throw new RiskTooHighException(rule.getMessage());
             }
         }
-    }
-
-    public void setRules(List<Risk> rules) {
-        this.rules = rules;
     }
 }

@@ -13,24 +13,18 @@ class RiskAnalyserSpec extends Specification {
 
     def "should throw exception when the rule applies"() {
         given:
-            def analyzer = new RiskAnalyser()
-            analyzer.setRules([new SureRisk()])
-
+            def analyzer = new RiskAnalyser([new SureRisk()])
         when:
             analyzer.validate(simpleLoan())
-
         then:
             thrown(RiskTooHighException)
     }
 
     def "should risk validation pass when none of rules applies"() {
         given:
-            def analyzer = new RiskAnalyser()
-            analyzer.setRules([new NoRisk(), new NoRisk()])
-
+            def analyzer = new RiskAnalyser([new NoRisk(), new NoRisk()])
         when:
             analyzer.validate(simpleLoan())
-
         then:
             notThrown(RiskTooHighException)
     }
