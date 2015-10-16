@@ -1,7 +1,7 @@
 package com.stefanski.loan.rest.error;
 
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
-import com.stefanski.loan.core.ex.RiskTooHighException;
+import com.stefanski.loan.core.risk.RiskTooHighException;
 import com.stefanski.loan.rest.model.response.ErrorResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;

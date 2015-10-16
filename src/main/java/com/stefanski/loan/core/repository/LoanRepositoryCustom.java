@@ -14,5 +14,5 @@ public interface LoanRepositoryCustom {
      * @param day when loan was created
      * @return number of loans
      */
-    long getLoanCountFor(String ip, LocalDate day);
+    long loanCountFor(String ip, LocalDate day);
 }

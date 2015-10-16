@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface LoanRepository extends CrudRepository<Loan, Long>, LoanRepositoryCustom {
 
-    List<Loan> findByIpAndStartBetween(String ip, LocalDateTime start, LocalDateTime end);
+    long countByIpAndStartBetween(String ip, LocalDateTime start, LocalDateTime end);
 }

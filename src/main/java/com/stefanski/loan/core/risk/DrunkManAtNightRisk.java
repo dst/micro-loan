@@ -44,15 +44,15 @@ class DrunkManAtNightRisk implements Risk {
 
     private boolean isAppliedAtNight(Loan loan) {
         LocalTime time = loan.getStart().toLocalTime();
-        return isTimeBetweenInclusive(time, getNightStart(), getNightEnd());
+        return isTimeBetweenInclusive(time, startOfNight(), endOfNight());
     }
 
-    private LocalTime getNightStart() {
+    private LocalTime startOfNight() {
         return MIDNIGHT;
     }
 
-    private LocalTime getNightEnd() {
-        return getNightStart().plusHours(6);
+    private LocalTime endOfNight() {
+        return startOfNight().plusHours(6);
     }
 
     private boolean isTimeBetweenInclusive(LocalTime time, LocalTime start, LocalTime end) {

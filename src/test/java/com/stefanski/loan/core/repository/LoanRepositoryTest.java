@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static com.stefanski.loan.util.TestDataFixture.simpleCustomer;
 import static com.stefanski.loan.util.TestDataFixture.simpleLoan;
@@ -39,10 +38,10 @@ public class LoanRepositoryTest extends RepositoryIntegrationTest {
         LocalDateTime end = now.plusMinutes(30);
 
         // when:
-        List<Loan> loans = loanRepository.findByIpAndStartBetween(loan.getIp(), start, end);
+        long count = loanRepository.countByIpAndStartBetween(loan.getIp(), start, end);
 
         // then:
-        assertThat(loans).hasSize(2);
+        assertThat(count).isEqualTo(2);
     }
 
     @Test
@@ -57,7 +56,7 @@ public class LoanRepositoryTest extends RepositoryIntegrationTest {
         createSimpleLoan(now.plusDays(1));
 
         // when:
-        long count = loanRepository.getLoanCountFor(loan.getIp(), day);
+        long count = loanRepository.loanCountFor(loan.getIp(), day);
 
         // then:
         assertThat(count).isEqualTo(2);

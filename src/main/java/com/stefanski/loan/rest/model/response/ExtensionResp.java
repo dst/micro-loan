@@ -6,6 +6,8 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Dariusz Stefanski
  */
@@ -19,10 +21,12 @@ public class ExtensionResp {
     @ApiModelProperty(value = "creation time in ISO_DATE format (yyyy-mm-dd)", required = true)
     private String creationTime;
 
+    private ExtensionResp(Long id, LocalDateTime creationTime) {
+        this.id = id;
+        this.creationTime = Formatter.formatTime(creationTime);
+    }
+
     public static ExtensionResp fromExtension(Extension ext) {
-        ExtensionResp resp = new ExtensionResp();
-        resp.setId(ext.getId());
-        resp.setCreationTime(Formatter.formatTime(ext.getCreationTime()));
-        return resp;
+        return new ExtensionResp(ext.getId(), ext.getCreationTime());
     }
 }

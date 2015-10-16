@@ -3,7 +3,7 @@ package com.stefanski.loan.core.service;
 import com.stefanski.loan.core.domain.Customer;
 import com.stefanski.loan.core.domain.Loan;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
-import com.stefanski.loan.core.ex.RiskTooHighException;
+import com.stefanski.loan.core.risk.RiskTooHighException;
 import com.stefanski.loan.core.repository.LoanRepository;
 import com.stefanski.loan.core.risk.RiskAnalyser;
 import com.stefanski.loan.rest.model.request.LoanReq;
@@ -56,7 +56,7 @@ public class LoanService {
         loanRepository.save(loan);
     }
 
-    public Long applyForLoan(LoanReq loanReq) throws RiskTooHighException {
+    public Long applyForLoan(LoanReq loanReq) {
         Loan loan = createLoanFromRequest(loanReq);
 
         riskAnalyser.validate(loan);

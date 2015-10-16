@@ -1,7 +1,7 @@
 package com.stefanski.loan.rest.controller;
 
 import com.stefanski.loan.core.domain.Loan;
-import com.stefanski.loan.core.ex.RiskTooHighException;
+import com.stefanski.loan.core.risk.RiskTooHighException;
 import com.stefanski.loan.core.service.LoanService;
 import com.stefanski.loan.rest.model.request.LoanReq;
 import com.stefanski.loan.rest.model.response.CreationResp;
@@ -61,7 +61,7 @@ public class LoanController extends AbstractRestController {
     public ResponseEntity<CreationResp> createLoan(
             @ApiParam(value = "Loan object that needs to be created")
             @Valid @RequestBody LoanReq loanReq,
-            HttpServletRequest req) throws RiskTooHighException {
+            HttpServletRequest req) {
 
         loanReq.setIp(req.getRemoteAddr());
         Long loanId = loanService.applyForLoan(loanReq);

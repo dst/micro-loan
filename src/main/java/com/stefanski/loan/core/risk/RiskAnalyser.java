@@ -1,7 +1,6 @@
 package com.stefanski.loan.core.risk;
 
 import com.stefanski.loan.core.domain.Loan;
-import com.stefanski.loan.core.ex.RiskTooHighException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,7 +27,7 @@ public class RiskAnalyser {
      * @param loan validated loan
      * @throws RiskTooHighException if at least one risk was detected
      */
-    public void validate(Loan loan) throws RiskTooHighException {
+    public void validate(Loan loan) {
         for (Risk rule : rules) {
             log.debug("Checking {}", rule.getName());
             if (rule.isApplicableTo(loan)) {

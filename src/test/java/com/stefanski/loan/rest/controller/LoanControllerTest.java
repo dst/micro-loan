@@ -3,7 +3,7 @@ package com.stefanski.loan.rest.controller;
 import com.stefanski.loan.core.domain.Extension;
 import com.stefanski.loan.core.domain.Loan;
 import com.stefanski.loan.core.ex.ResourceNotFoundException;
-import com.stefanski.loan.core.ex.RiskTooHighException;
+import com.stefanski.loan.core.risk.RiskTooHighException;
 import com.stefanski.loan.core.service.LoanService;
 import com.stefanski.loan.rest.model.request.LoanReq;
 import org.hamcrest.Matchers;

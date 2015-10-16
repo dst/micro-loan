@@ -1,10 +1,6 @@
 package com.stefanski.loan.core.risk
 
 import com.stefanski.loan.core.repository.LoanRepository
-import org.junit.Before
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import spock.lang.Specification
 
 import static com.stefanski.loan.util.TestDataFixture.simpleLoan
@@ -18,7 +14,7 @@ class OfficiousManRiskSpec extends Specification {
         given:
             def loanLimitPerIp = 2
             LoanRepository loanRepository = Mock(LoanRepository)
-            loanRepository.getLoanCountFor(_, _) >> loanCount
+            loanRepository.loanCountFor(_, _) >> loanCount
             def risk = new OfficiousManRisk(loanLimitPerIp, loanRepository)
         expect:
             risk.isApplicableTo(simpleLoan()) == risky

@@ -1,7 +1,6 @@
 package com.stefanski.loan.core.risk
 
 import com.stefanski.loan.core.domain.Loan
-import com.stefanski.loan.core.ex.RiskTooHighException
 import spock.lang.Specification
 
 import static com.stefanski.loan.util.TestDataFixture.simpleLoan
