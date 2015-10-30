@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# It generates usuful reports about code and opens it.
+# It generates useful reports about code and opens it.
 #
 # Author: Dariusz Stefanski
 # Date:   11.06.2014
